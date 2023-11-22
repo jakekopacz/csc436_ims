@@ -1,5 +1,4 @@
-Use Inventory;
-
+use Inventory;
 
 INSERT INTO Customer(email, credit_card)
 VALUES('cust1@gmail.com','1');
@@ -34,43 +33,43 @@ VALUES ('supplier2@gmail.com',3, 50);
 INSERT INTO SupplierList(supplier_email, item_id, cost)
 VALUES ('supplier3@gmail.com',3, 75);
 
-INSERT INTO SalesOrder(order_id, total, shipping_option, tracking_num, customer_email)
-VALUES (1, 123, 'express', '123ship', 'cust1@gmail.com');
+INSERT INTO SalesOrder(order_id, shipping_option, tracking_num, customer_email)
+VALUES (1, 'express', '123ship', 'cust1@gmail.com');
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(1, 1, 10);
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(1, 2, 10);
 
-INSERT INTO SalesOrder(order_id, total, shipping_option, tracking_num, customer_email)
-VALUES (2, 123, 'express', '123ship', 'cust1@gmail.com');
+INSERT INTO SalesOrder(order_id, shipping_option, tracking_num, customer_email)
+VALUES (2, 'express', '123ship', 'cust1@gmail.com');
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(2, 1, 10);
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(2, 2, 10);
 
-INSERT INTO SalesOrder(order_id, total, shipping_option, tracking_num, customer_email)
-VALUES (3, 123, 'express', '123ship', 'cust1@gmail.com');
+INSERT INTO SalesOrder(order_id, shipping_option, tracking_num, customer_email)
+VALUES (3, 'express', '123ship', 'cust1@gmail.com');
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(3, 2, 10);
 INSERT INTO ItemOrder(order_id, item_id, quantity)
 VALUES(3, 3, 10);
 
-INSERT INTO ReplenishOrder(replenish_id, total, shipping_option, tracking_num, supplier_email)
-VALUES (1, 123, 'express', '123ship', 'supplier1@gmail.com');
+INSERT INTO ReplenishOrder(replenish_id, shipping_option, tracking_num, supplier_email)
+VALUES (1, 'express', '123ship', 'supplier1@gmail.com');
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
 VALUES(1, 1, 10);
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
 VALUES(1, 2, 10);
 
-INSERT INTO ReplenishOrder(replenish_id, total, shipping_option, tracking_num, supplier_email)
-VALUES (2, 123, 'express', '123ship', 'supplier2@gmail.com');
+INSERT INTO ReplenishOrder(replenish_id, shipping_option, tracking_num, supplier_email)
+VALUES (2, 'express', '123ship', 'supplier2@gmail.com');
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
 VALUES(2, 2, 10);
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
 VALUES(2, 3, 10);
 
-INSERT INTO ReplenishOrder(replenish_id, total, shipping_option, tracking_num, supplier_email)
-VALUES (3, 123, 'express', '123ship', 'supplier1@gmail.com');
+INSERT INTO ReplenishOrder(replenish_id, shipping_option, tracking_num, supplier_email)
+VALUES (3, 'express', '123ship', 'supplier1@gmail.com');
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
 VALUES(3, 1, 10);
 INSERT INTO ItemReplenish(replenish_id, item_id, quantity)

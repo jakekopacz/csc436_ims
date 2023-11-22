@@ -1,114 +1,76 @@
-create database Inventory;
+
 use Inventory;
+###BASIC QUERIES
 
-###tables that hold main entity data
+#QUERY, INSERT, DELETE, UPDATE INTO CUSTOMER
+INSERT INTO Customer(email, credit_card)
+VALUES('customerDEMO@gmail.com','fakefake');
+UPDATE Customer SET credit_card = 'updatedfake' WHERE email='customerDEMO@gmail.com';
+DELETE FROM Customer WHERE email = 'customerDEMO@gmail.com';
 
-create table Customer (
-                          email varchar(32),
-                          credit_card varchar(16),
-                          primary key(email)
-);
+#QUERY, INSERT, DELETE, UPDATE INTO SUPPLIER
+INSERT INTO Supplier(email, account_balance, lead_time)
+VALUES('supplierDEMO@gmail.com', 0, 6);
+UPDATE Supplier SET account_balance = 1 WHERE email='supplierDEMO@gmail.com';
+DELETE FROM Customer WHERE email='supplierDEMO@gmail.com';
 
-create table Supplier (
-                          email varchar(32),
-                          account_balance numeric(8,2),
-                          lead_time int,
-                          primary key(email)
-);
+#QUERY, INSERT, DELETE, UPDATE INTO ITEM
+INSERT INTO Item(item_id, quantity, price, category)
+Values(99, 999, 999, 'demo');
+UPDATE Item SET price = 1000 WHERE item_id = 99;
+DELETE FROM Item WHERE item_id = 99;
 
-create table Item (
-                      item_id int,
-                      quantity int,
-                      price numeric(7,2),
-                      category varchar(32),
-                      primary key(item_id)
-);
+#QUERY, INSERT, DELETE, UPDATE INTO SALESORDER
+INSERT INTO SalesOrder(order_id, shipping_option, tracking_num, customer_email)
+#customer_email is a FK constraint here
+VALUES (4, 'express', '123ship', 'cust2@gmail.com');
+UPDATE SalesOrder SET shipping_option = 'regular' WHERE order_id = 4;
+DELETE FROM SalesOrder WHERE order_id = 4;
 
-###tables that relate Item to the other main entities, essentially holding order data
-#both incoming/outgoing orders are split into two tables, since items are multivalued attributes:
-#	for customers and item, we have SalesOrder and ItemOrder
-#	for suppliers and item, we have ReplenishOrder and ItemReplenish
-#suppliers and items are many to many, so this data is stored in SupplierList
+#QUERY, INSERT, DELETE, UPDATE INTO REPLENISHORDER
+INSERT INTO ReplenishOrder(replenish_id, shipping_option, tracking_num, supplier_email)
+VALUES (4, 'standard', '321ship', 'supplierDEMO@gmail.com');
+UPDATE ReplenishOrder SET tracking_num = 'ship321' WHERE replenish_id = 4;
+DELETE FROM ReplenishOrder WHERE replenish_id = 4;
 
+#QUERY, INSERT, DELETE, UPDATE INTO ITEMORDER
+INSERT INTO ItemOrder(order_id, item_id, quantity)
+VALUES(3, 1, 20);
+#cancel item from order
+UPDATE ItemOrder SET quantity = 0 WHERE order_id = 3 and ItemOrder.item_id = 1;
+#cancel entire order without deleting
+UPDATE ItemOrder SET quantity = 0 WHERE order_id = 3;
+DELETE FROM ItemOrder WHERE order_id = 3;
 
-#table holds data on customer sales
-create table SalesOrder (
-                            order_id int,
-                            shipping_option varchar(16),
-                            tracking_num varchar(32),
-                            customer_email varchar(32),
-                            primary key(order_id),
-                            foreign key(customer_email) references Customer(email)
-);
+#QUERY, INSERT, DELETE, UPDATE INTO ITEMREPLENISH
+INSERT INTO ItemReplenish(replenish_id, item_id, quantity)
+VALUES(1, 3, 20);
+UPDATE ItemReplenish SET quantity = 30 WHERE replenish_id = 1 and ItemReplenish.item_id = 3;
+DELETE FROM ItemReplenish WHERE replenish_id = 1;
 
-#table holds data on supplier orders
-create table ReplenishOrder (
-                                replenish_id int,
-                                shipping_option varchar(16),
-                                tracking_num varchar(32),
-                                supplier_email varchar(32),
-                                primary key(replenish_id),
-                                foreign key(supplier_email) references Supplier(email)
-);
-
-
-#table relates customer order to items ordered and their quantities
-#one order can have many items, and one item can have many orders
-create table ItemOrder (
-                           order_id int,
-                           item_id int,
-                           quantity int,
-                           primary key(order_id, item_id),
-                           foreign key(item_id) references Item(item_id),
-                           foreign key(order_id) references SalesOrder(order_id)
-);
-
-#table relates supplier order to items ordered and their quantities; similar many to many relation as above
-create table ItemReplenish (
-                               replenish_id int,
-                               item_id int,
-                               quantity int,
-                               primary key(replenish_id, item_id),
-                               foreign key(item_id) references Item(item_id),
-                               foreign key(replenish_id) references ReplenishOrder(replenish_id)
-);
-
-#table relates suppliers to their respective items
-#Many to many relationship between supplier and item.(i.e 1 item is supplied by 3 suppliers, 3 items are supplied by one supplier). Primary key is each supplier/item tuple.
-#cost is in this table bc different suppliers may have different cost.
-Create table SupplierList (
-        cost INT,
-        supplier_email varchar(32) references Supplier(email),
-    item_id INT references Item(item_id),
-    primary key(supplier_email, item_id)
-);
+#QUERY, INSERT, DELETE, UPDATE INTO SUPPLIERLIST
+INSERT INTO SupplierList(supplier_email, item_id)
+VALUES ('supplierDEMO@gmail.com',99);
+UPDATE SupplierList SET item_id = 100 WHERE supplier_email = 'supplierDEMO@gmail.com';
+DELETE FROM SupplierList WHERE supplier_email = 'supplierDEMO@gmail.com';
 
 
-###tables hold contact info for suppliers/customers and check for one unique email address
-create table MailingList(
-                            customer_email varchar(32),
-                            supplier_email varchar(32),
-                            address_1 varchar(128),
-                            address_2 varchar(128),
-                            address_3 varchar(128),
-                            city varchar(128),
-                            state char(2),
-                            country char(2),
-                            postal_code varchar(16),
-                            unique(customer_email,supplier_email),
-                            foreign key(customer_email) references Customer(email),
-                            foreign key(supplier_email) references Supplier(email),
-                            check(customer_email is null and supplier_email is not null or customer_email is not null and supplier_email is null)
-);
+###SPECIAL QUERIES
 
-create table PhoneList(
-                          customer_email varchar(32),
-                          supplier_email varchar(32),
-                          work_phone varchar(16),
-                          home_phone varchar(16),
-                          cell_phone varchar(16),
-                          unique(customer_email,supplier_email),
-                          foreign key(customer_email) references Customer(email),
-                          foreign key(supplier_email) references Supplier(email),
-                          check(customer_email is null and supplier_email is not null or customer_email is not null and supplier_email is null)
-);
+#show all tables
+show tables;
+
+#altering a table
+ALTER TABLE SalesOrder ADD shipping_fee numeric(5,2); 
+ALTER TABLE ItemOrder RENAME column quantity to item_quantity;
+#revert
+ALTER TABLE ItemOrder RENAME column item_quantity to quantity;
+ALTER TABLE SalesOrder DROP column shipping_fee;
+
+#show items out of stock
+INSERT INTO Item(item_id, quantity, price, category)
+Values(99, 0, 999, 'demo');
+SELECT item_id from Item where quantity = 0;
+
+#show how many days it takes for a restocking to work through the supply chain
+select item_id, sum(lead_time) from Supplier natural join SupplierList group by item_id;
