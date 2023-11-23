@@ -28,7 +28,7 @@ public class View extends javax.swing.JFrame {
 
     private void initComponents(Connection conn) {
 	
-	this.conn = conn;
+	    this.conn = conn;
 
         tablePane = new javax.swing.JScrollPane();
         mainPanel = new javax.swing.JPanel();
@@ -38,12 +38,12 @@ public class View extends javax.swing.JFrame {
         buttonDeliveries = new javax.swing.JButton();
         buttonContacts = new javax.swing.JButton();
         buttonAdd = new javax.swing.JButton();
-	buttonSubmit = new javax.swing.JButton();
-	buttonClose = new javax.swing.JButton();
+	    buttonSubmit = new javax.swing.JButton();
+	    buttonClose = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuEdit = new javax.swing.JMenu();
-	textfields = new ArrayList<JTextField>();
+	    textfields = new ArrayList<JTextField>();
 
         refreshScrollPane("SELECT * FROM Item");
 
@@ -153,43 +153,44 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
     }
 
     private void refreshScrollPane(String arg) {
-	try{
-	Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-	ResultSet rs = stmt.executeQuery(arg);
-	jTable = new JTable(DbUtils.resultSetToTableModel(rs));
-	tablePane.setViewportView(jTable);
-	} catch(SQLException ex){
-		ex.printStackTrace();
-	}
+        try{
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+        ResultSet rs = stmt.executeQuery(arg);
+
+        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn));
+        } catch(SQLException ex){
+            ex.printStackTrace();
+        }
     }
     private void postUpdatePanel() {
-	GroupLayout layout = new GroupLayout(updatePanel);
-	updatePanel.setLayout(layout);
-	layout.setAutoCreateGaps(true);
-	layout.setAutoCreateContainerGaps(true);
 
-	// add textfields to list; we can make an enum with different cases and make a switch here
-	textfields.add(new JTextField("Item"));
-	textfields.add(new JTextField("Quantity"));
+        GroupLayout layout = new GroupLayout(updatePanel);
+        updatePanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
-	GroupLayout.ParallelGroup textGroupH = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
-	for(JTextField text: textfields){
-		textGroupH.addComponent(text);
-	}
-	GroupLayout.SequentialGroup textButtonGroupH = layout.createSequentialGroup().addComponent(buttonSubmit).addComponent(buttonClose);
-//	textGroupH.addGroup(layout.createSequentialGroup().addComponent(buttonSubmit).addComponent(buttonClose));
-	layout.setHorizontalGroup(textGroupH.addGroup(textButtonGroupH));
-	
-	GroupLayout.SequentialGroup textGroupV = layout.createSequentialGroup();
-	for(JTextField text: textfields){
-		textGroupV.addComponent(text);
-	}
-	GroupLayout.ParallelGroup textButtonGroupV = layout.createParallelGroup().addComponent(buttonSubmit).addComponent(buttonClose);
-//	textGroupV.addGroup(layout.createParallelGroup().addComponent(buttonSubmit).addComponent(buttonClose));
-	layout.setVerticalGroup(textGroupV.addGroup(textButtonGroupV));
+        // add textfields to list; we can make an enum with different cases and make a switch here
+        textfields.add(new JTextField("Item"));
+        textfields.add(new JTextField("Quantity"));
 
-	updatePanel.revalidate();
-	updatePanel.repaint();
+        GroupLayout.ParallelGroup textGroupH = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        for(JTextField text: textfields){
+            textGroupH.addComponent(text);
+        }
+        GroupLayout.SequentialGroup textButtonGroupH = layout.createSequentialGroup().addComponent(buttonSubmit).addComponent(buttonClose);
+    //	textGroupH.addGroup(layout.createSequentialGroup().addComponent(buttonSubmit).addComponent(buttonClose));
+        layout.setHorizontalGroup(textGroupH.addGroup(textButtonGroupH));
+
+        GroupLayout.SequentialGroup textGroupV = layout.createSequentialGroup();
+        for(JTextField text: textfields){
+            textGroupV.addComponent(text);
+        }
+        GroupLayout.ParallelGroup textButtonGroupV = layout.createParallelGroup().addComponent(buttonSubmit).addComponent(buttonClose);
+    //	textGroupV.addGroup(layout.createParallelGroup().addComponent(buttonSubmit).addComponent(buttonClose));
+        layout.setVerticalGroup(textGroupV.addGroup(textButtonGroupV));
+
+        updatePanel.revalidate();
+        updatePanel.repaint();
     }
     private void removeUpdatePanel() {
 	textfields.clear();
@@ -197,6 +198,9 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
 	updatePanel.revalidate();
 	updatePanel.repaint();
     }
+
+
+
 
     private javax.swing.JButton buttonInventory;
     private javax.swing.JButton buttonOrders;
@@ -211,7 +215,6 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel updatePanel;
     private javax.swing.JScrollPane tablePane;
-    private javax.swing.JTable jTable;
     private Connection conn;
     private java.util.List<JTextField> textfields;
 }

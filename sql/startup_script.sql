@@ -55,7 +55,7 @@ create table if not exists ItemReplenish (
     quantity int,
     primary key(replenish_id, item_id),
     foreign key(item_id) references Item(item_id),
-    foreign key(order_id) references SalesOrder(order_id)
+    foreign key(replenish_id) references ReplenishOrder(replenish_id)
 );
 
 create table if not exists ItemReplenish (
