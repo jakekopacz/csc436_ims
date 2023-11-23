@@ -1,7 +1,6 @@
 import java.sql.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
-
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 public class Main{
@@ -30,7 +29,7 @@ public class Main{
 
 	public static Connection getConnection() throws Exception{
         	try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver"); // Needed to add .cj due to this error: `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'
         		Connection conn = DriverManager.getConnection(URL, USER, PASS);
 			return conn;
         	} catch (Exception ex) {
