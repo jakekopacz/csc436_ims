@@ -10,8 +10,9 @@ public class ItemDb {
             statement.setInt(1, item_id);
             statement.setInt(2, quantity);
             statement.setFloat(3, price);
-            statement.setString(3, category);
+            statement.setString(4, category);
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -25,12 +26,12 @@ public class ItemDb {
      */
     public static void delete(Connection connection, int item_id) {
         try {
-            String sql = "DELETE FROM item WHERE id = ?";
+            String sql = "DELETE FROM item WHERE item_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, item_id);
 
             int rowsAffected = statement.executeUpdate();
-
+            connection.commit();
             if (rowsAffected > 0) {
                 System.out.println("Item removed successfully.");
             } else {
@@ -56,15 +57,17 @@ public class ItemDb {
             statement.setInt(2, item_id);
 
             int rowsAffected = statement.executeUpdate();
-
+            connection.commit();
             if (rowsAffected > 0) {
-                System.out.println("Item modified successfully.");
+                System.out.println("Item modified successfully");
             } else {
                 System.out.println("Item not found.");
             }
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -81,7 +84,7 @@ public class ItemDb {
             statement.setInt(2, item_id);
 
             int rowsAffected = statement.executeUpdate();
-
+            connection.commit();
             if (rowsAffected > 0) {
                 System.out.println("Item modified successfully.");
             } else {

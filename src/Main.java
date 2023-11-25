@@ -25,6 +25,13 @@ public class Main{
         	        new View(conn).setVisible(true);
 	        }
 	        });
+
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				closeConnection(conn);
+				System.out.println("In shutdown hook");
+			}
+		}, "Shutdown-thread"));
 	}
 
 	public static Connection getConnection() throws Exception{
@@ -38,4 +45,18 @@ public class Main{
 			return null;
         	}
 	}
+
+	public static void closeConnection(Connection conn) {
+
+		try {
+			if(conn != null) {
+				conn.close();
+			}
+			System.out.println("Disconnected from database");
+		}
+		catch(SQLException e) {
+			System.err.println(e.getMessage());
+		}
+	}
 }
+

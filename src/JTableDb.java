@@ -8,7 +8,6 @@ import java.sql.*;
 
 public class JTableDb {
 
-
     /**
      * Call this when JTbale is needed
      * @param rs
@@ -34,6 +33,7 @@ public class JTableDb {
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
         jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         jTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -53,12 +53,12 @@ public class JTableDb {
                 System.out.println(data);
 
                 int id = Integer.parseInt(item_id.toString());
-                int quantity = Integer.parseInt(data.toString());
+
 
                 System.out.println(item_id);
                 System.out.println(data);
 
-                ItemDb.update(conn, id, quantity);
+                ReplenishOrderDb.update(conn, id, "shipping_option", data.toString());
 
             }
         } );

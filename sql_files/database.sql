@@ -77,8 +77,8 @@ create table ItemReplenish (
 #Many to many relationship between supplier and item.(i.e 1 item is supplied by 3 suppliers, 3 items are supplied by one supplier). Primary key is each supplier/item tuple.
 #cost is in this table bc different suppliers may have different cost.
 Create table SupplierList (
-        cost INT,
-        supplier_email varchar(32) references Supplier(email),
+    cost INT,
+    supplier_email varchar(32) references Supplier(email),
     item_id INT references Item(item_id),
     primary key(supplier_email, item_id)
 );
