@@ -26,6 +26,7 @@ public class View extends javax.swing.JFrame {
         initComponents(conn);
     }
 
+
     private void initComponents(Connection conn) {
 	
 	    this.conn = conn;
