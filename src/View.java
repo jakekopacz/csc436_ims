@@ -26,7 +26,6 @@ public class View extends javax.swing.JFrame {
         initComponents(conn);
     }
 
-
     private void initComponents(Connection conn) {
 	
 	    this.conn = conn;
@@ -45,6 +44,8 @@ public class View extends javax.swing.JFrame {
         menuFile = new javax.swing.JMenu();
         menuEdit = new javax.swing.JMenu();
 	    textfields = new ArrayList<JTextField>();
+        topPanel = new topBar(this);
+        rightSideBar = new RightSideBar();
 
         refreshScrollPane("SELECT * FROM Item");
 
@@ -89,7 +90,7 @@ public class View extends javax.swing.JFrame {
 	buttonAdd.setText("Add");
         buttonAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-		postUpdatePanel();
+		        postUpdatePanel();
             }
         });
 
@@ -121,17 +122,21 @@ public class View extends javax.swing.JFrame {
 	layout.setAutoCreateContainerGaps(true);
 
 	layout.setHorizontalGroup(
-layout.createParallelGroup((GroupLayout.Alignment.LEADING))
-   .addGroup(layout.createSequentialGroup()
-      .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-           .addComponent(buttonInventory)
-           .addComponent(buttonOrders)
-           .addComponent(buttonDeliveries)
-           .addComponent(buttonContacts)
-           .addComponent(buttonAdd))
-      .addComponent(tablePane))
-   .addComponent(updatePanel)
-      );
+        layout.createParallelGroup((GroupLayout.Alignment.LEADING))
+           .addGroup(layout.createSequentialGroup()
+              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                   .addComponent(buttonInventory)
+                   .addComponent(buttonOrders)
+                   .addComponent(buttonDeliveries)
+                   .addComponent(buttonContacts)
+                   .addComponent(buttonAdd))
+               .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+              .addComponent(tablePane)
+                   .addComponent(this.topPanel.getTopBar()))
+                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                           .addComponent(this.rightSideBar.getRightSideBar())))
+           .addComponent(updatePanel)
+    );
 
 	layout.setVerticalGroup(
    layout.createParallelGroup()
@@ -142,8 +147,11 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
            .addComponent(buttonContacts)
            .addComponent(buttonAdd))
       .addGroup(layout.createSequentialGroup()
-	   .addComponent(tablePane)
-	   .addComponent(updatePanel))
+              .addComponent(this.topPanel.getTopBar(), 30, 30, 30)
+           .addComponent(tablePane)
+           .addComponent(updatePanel))
+           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                   .addComponent(this.rightSideBar.getRightSideBar()))
       );
 
 
@@ -153,16 +161,17 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
 	setSize(640, 480);
     }
 
-    private void refreshScrollPane(String arg) {
+    public void refreshScrollPane(String arg) {
         try{
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = stmt.executeQuery(arg);
-
         tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn));
         } catch(SQLException ex){
             ex.printStackTrace();
         }
     }
+
+
     private void postUpdatePanel() {
 
         GroupLayout layout = new GroupLayout(updatePanel);
@@ -210,12 +219,21 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonSubmit;
     private javax.swing.JButton buttonClose;
+
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuEdit;
     private javax.swing.JMenuBar menuBar;
+
+
     private javax.swing.JPanel mainPanel;
+
+    private LeftSideBar leftSideBar;
+    private RightSideBar rightSideBar;
+    private topBar topPanel;
+
     private javax.swing.JPanel updatePanel;
     private javax.swing.JScrollPane tablePane;
+
     private Connection conn;
     private java.util.List<JTextField> textfields;
 }

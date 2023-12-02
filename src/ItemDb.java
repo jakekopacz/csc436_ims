@@ -95,4 +95,25 @@ public class ItemDb {
         }
     }
 
+//    static public ResultSet quantitySearch(int min, int max, Connection connection) {
+//
+//
+//        String sql = "SELECT * FROM item WHERE quantity >= ? and quantity <= ?;";
+//        try {
+//            PreparedStatement pstmnt = connection.prepareStatement(sql);
+//            pstmnt.setInt(1, min);
+//            pstmnt.setInt(2, max);
+//            ResultSet rs = pstmnt.executeQuery();
+//
+//            rs.close();
+//            pstmnt.close();
+//            System.out.println("Search GOOD");
+//        } catch (SQLException e) {
+//            System.err.println(e.getMessage());
+//        }
+//
+//        return results;
+//
+//    }
+
 }
