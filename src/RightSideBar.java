@@ -5,32 +5,18 @@ import java.util.*;
 import javax.swing.SpringLayout;
 // Features that are specific to each table
 public class RightSideBar {
-    public enum options { // specifies each table
-        ITEM,
-        CUSTOMER,
-        SUPPLIER,
-        SALES_ORDER,
-        REPLENISH_ORDER,
-        ITEM_ORDER,
-        ITEM_REPLENISH,
-        SUPPLIER_LIST
-    }
 
-    RightSideBar(options op) {
+    RightSideBar(TableOptions.options op, View view) {
 
         switch (op) {
-
             case ITEM:
-                makeItemBar();
+                makeItemBar(view);
         }
 
     }
-    RightSideBar() {
-        makeItemBar();
-    }
-    private void makeItemBar() {
+    private void makeItemBar(View view) {
 
-        this.quantity = new JLabel("Quantity:");
+        this.quantity = new JLabel("Quantity");
         this.minQuantity = new JLabel("Min:");
         this.maxQuantity = new JLabel("Max:");
         this.minQuantityInput = new JTextField(5);
@@ -39,7 +25,7 @@ public class RightSideBar {
         maxQuantityInput.setMaximumSize(new Dimension(80, 30));
 
 
-        this.price = new JLabel("Price:");
+        this.price = new JLabel("Price");
         this.minPrice = new JLabel("Min:");
         this.maxPrice = new JLabel("Max:");
         this.minPriceInput = new JTextField(5);
@@ -68,28 +54,62 @@ public class RightSideBar {
         this.panel.add(quantityFilterButton);
         this.panel.add(priceFilterButton);
 
-
-
         SpringUtilities.makeCompactGrid(panel,
                 6, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
 
+        // need to add check that input is valid number (i.e no chars)
+        quantityFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int min = 0;
+                int max = Integer.MAX_VALUE;
+                if (!minQuantityInput.getText().isEmpty()) {
+                    min = Integer.parseInt(minQuantityInput.getText());
+                }
+                if (!maxQuantityInput.getText().isEmpty()){
+                    max = Integer.parseInt(maxQuantityInput.getText());
+                }
 
+                if (min != 0 || max != Integer.MAX_VALUE) {
+                    view.refreshScrollPane(ItemDb.quantitySearch(min, max, view.conn));
+                }
+                else {
+                    view.refreshScrollPane(ItemDb.getAll(view.conn));
+                }
+                System.out.println(min + " , " + max);
+            }
+        });
+
+        priceFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                int min = 0;
+                int max = Integer.MAX_VALUE;
+                if (!minPriceInput.getText().isEmpty()) {
+                    min = Integer.parseInt(minPriceInput.getText());
+                }
+                if (!maxPriceInput.getText().isEmpty()){
+                    max = Integer.parseInt(maxPriceInput.getText());
+                }
+
+                if (min != 0 || max != Integer.MAX_VALUE) {
+                    view.refreshScrollPane(ItemDb.priceSearch(min, max, view.conn));
+                }
+                else {
+                    view.refreshScrollPane(ItemDb.getAll(view.conn));
+                }
+                System.out.println(min + " , " + max);
+            }
+        });
     }
 
     public JPanel getRightSideBar() {
         return this.panel;
 
-
     }
 
     private javax.swing.JPanel panel;
-    private javax.swing.JPanel panel1;
-    private javax.swing.JPanel panel2;
-    private javax.swing.JPanel panel3;
-    private javax.swing.JPanel panel4;
 
     private javax.swing.JButton quantityFilterButton;
     private javax.swing.JLabel quantity;
@@ -97,7 +117,6 @@ public class RightSideBar {
     private javax.swing.JLabel maxQuantity;
     private javax.swing.JTextField minQuantityInput;
     private javax.swing.JTextField maxQuantityInput;
-
 
     private javax.swing.JButton priceFilterButton;
     private javax.swing.JLabel price;

@@ -13,7 +13,8 @@ public class JTableDb {
      * @param rs
      * @return JTable
      */
-    static public javax.swing.JTable makeJTable(ResultSet rs, Connection conn) {
+
+    static public javax.swing.JTable makeJTable(ResultSet rs, Connection conn, TableOptions.options op) {
 
         javax.swing.JTable jTable;
         jTable = new JTable(DbUtils.resultSetToTableModel(rs))  {
@@ -25,7 +26,6 @@ public class JTableDb {
                     return true;
                 }
             }
-
         };
 
         jTable.getTableHeader().setReorderingAllowed(false); // not allow re-ordering of columns
@@ -34,31 +34,48 @@ public class JTableDb {
         jTable.setColumnSelectionAllowed(false);
         jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+
+        switch (op) {
+
+            case ITEM:
+                return makeItem(jTable, conn);
+
+        }
+
+        return null;
+    }
+    static private javax.swing.JTable makeItem(JTable jTable, Connection conn) {
+
         jTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-                if (e.getColumn() != 1) {
-                    return;
-                }
+
                 int row = e.getFirstRow();
                 int column = e.getColumn();
                 TableModel model = (TableModel)e.getSource();
-                String columnName = model.getColumnName(column);
 
-                Object item_id = model.getValueAt(row, 0);
+                Object row_id = model.getValueAt(row, 0);
                 Object data = model.getValueAt(row, column);
 
+                int id = Integer.parseInt(row_id.toString());
+                String columnName = model.getColumnName(column);
 
-                System.out.println(item_id);
+                System.out.println(id);
                 System.out.println(data);
 
-                int id = Integer.parseInt(item_id.toString());
+                switch (columnName) {
 
+                    case "quantity":
+                        ItemDb.update(conn, id, Integer.parseInt(data.toString()));
+                        break;
+                    case "price":
+                        ItemDb.update(conn, id, Double.parseDouble(data.toString()));
+                        break;
+                    case "category":
+                        ItemDb.update(conn, id, data.toString());
+                        break;
+                }
 
-                System.out.println(item_id);
-                System.out.println(data);
-
-                ReplenishOrderDb.update(conn, id, "shipping_option", data.toString());
 
             }
         } );

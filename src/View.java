@@ -45,7 +45,7 @@ public class View extends javax.swing.JFrame {
         menuEdit = new javax.swing.JMenu();
 	    textfields = new ArrayList<JTextField>();
         topPanel = new topBar(this);
-        rightSideBar = new RightSideBar();
+        rightSideBar = new RightSideBar(TableOptions.options.ITEM, this);
 
         refreshScrollPane("SELECT * FROM Item");
 
@@ -69,7 +69,7 @@ public class View extends javax.swing.JFrame {
         buttonOrders.setText("Orders");
         buttonOrders.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshScrollPane("SELECT * FROM ItemOrder");
+                refreshScrollPane("SELECT * FROM SalesOrder");
             }
         });
 
@@ -165,10 +165,16 @@ public class View extends javax.swing.JFrame {
         try{
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
         ResultSet rs = stmt.executeQuery(arg);
-        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn));
+        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn, TableOptions.options.ITEM));
         } catch(SQLException ex){
             ex.printStackTrace();
         }
+    }
+
+    public void refreshScrollPane(ResultSet rs) {
+
+        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn, TableOptions.options.ITEM));
+
     }
 
 
@@ -234,6 +240,6 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JPanel updatePanel;
     private javax.swing.JScrollPane tablePane;
 
-    private Connection conn;
+    public Connection conn;
     private java.util.List<JTextField> textfields;
 }
