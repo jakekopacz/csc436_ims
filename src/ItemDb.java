@@ -136,7 +136,7 @@ public class ItemDb {
     }
     static public ResultSet quantitySearch(int min, int max, Connection connection) {
 
-        String sql = "SELECT * FROM item WHERE quantity >= ? and quantity <= ?;";
+        String sql = "SELECT * FROM item WHERE quantity >= ? and quantity <= ? ORDER BY quantity;";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -159,7 +159,7 @@ public class ItemDb {
 
     static public ResultSet priceSearch(int min, int max, Connection connection) {
 
-        String sql = "SELECT * FROM item WHERE price >= ? and price <= ?;";
+        String sql = "SELECT * FROM item WHERE price >= ? and price <= ? ORDER BY price;";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);

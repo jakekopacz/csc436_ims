@@ -8,13 +8,40 @@ public class RightSideBar {
 
     RightSideBar(TableOptions.options op, View view) {
 
+        this.panel = new JPanel();
+
         switch (op) {
             case ITEM:
                 makeItemBar(view);
+                break;
+            case SALES_ORDER:
+                makeSalesOrderBar(view);
+                break;
         }
 
     }
+
+    public void makeSideBar(TableOptions.options op, View view) {
+
+        this.panel.removeAll();
+
+        switch (op) {
+            case ITEM:
+                makeItemBar(view);
+                break;
+            case SALES_ORDER:
+                System.out.println("SalesOrderBar");
+                makeSalesOrderBar(view);
+                break;
+        }
+        this.panel.revalidate();
+        this.panel.repaint();
+        System.out.println("SalesOrderBarLL");
+
+    }
+
     private void makeItemBar(View view) {
+
 
         this.quantity = new JLabel("Quantity");
         this.minQuantity = new JLabel("Min:");
@@ -40,7 +67,7 @@ public class RightSideBar {
 
 
         SpringLayout layout = new SpringLayout();
-        this.panel = new JPanel(layout);
+        this.panel.setLayout(layout);
         this.panel.add(quantity);
         this.panel.add(price);
         this.panel.add(minQuantity);
@@ -73,10 +100,10 @@ public class RightSideBar {
                 }
 
                 if (min != 0 || max != Integer.MAX_VALUE) {
-                    view.refreshScrollPane(ItemDb.quantitySearch(min, max, view.conn));
+                    view.refreshScrollPane(ItemDb.quantitySearch(min, max, view.conn), TableOptions.options.ITEM);
                 }
                 else {
-                    view.refreshScrollPane(ItemDb.getAll(view.conn));
+                    view.refreshScrollPane(ItemDb.getAll(view.conn), TableOptions.options.ITEM);
                 }
                 System.out.println(min + " , " + max);
             }
@@ -94,14 +121,44 @@ public class RightSideBar {
                 }
 
                 if (min != 0 || max != Integer.MAX_VALUE) {
-                    view.refreshScrollPane(ItemDb.priceSearch(min, max, view.conn));
+                    view.refreshScrollPane(ItemDb.priceSearch(min, max, view.conn), TableOptions.options.ITEM);
                 }
                 else {
-                    view.refreshScrollPane(ItemDb.getAll(view.conn));
+                    view.refreshScrollPane(ItemDb.getAll(view.conn), TableOptions.options.ITEM);
                 }
                 System.out.println(min + " , " + max);
             }
         });
+
+    }
+
+    private void makeSalesOrderBar(View view) {
+
+
+        this.seeDetails = new JButton("Order Details");
+        seeDetails.setMaximumSize(new Dimension(80, 40));
+
+        priceFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                // need a popup window of a Jscroll Pane
+                // call upon view.jtable.getSelected();
+                // calls order_item_quantity_price where order_id = selected order_id
+                // pop up window needs to allow add / remove of items
+            }
+        });
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(this.seeDetails);
+
+
+
+        SpringUtilities.makeCompactGrid(panel,
+                1, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
     }
 
     public JPanel getRightSideBar() {
@@ -109,8 +166,9 @@ public class RightSideBar {
 
     }
 
-    private javax.swing.JPanel panel;
+    public javax.swing.JPanel panel;
 
+    // ITEM COMPONENTS
     private javax.swing.JButton quantityFilterButton;
     private javax.swing.JLabel quantity;
     private javax.swing.JLabel minQuantity;
@@ -124,6 +182,21 @@ public class RightSideBar {
     private javax.swing.JLabel maxPrice;
     private javax.swing.JTextField minPriceInput;
     private javax.swing.JTextField maxPriceInput;
+
+    // SALES_ORDER COMPONENTS
+    private javax.swing.JButton seeDetails;
+//    private javax.swing.JLabel quantity;
+//    private javax.swing.JLabel minQuantity;
+//    private javax.swing.JLabel maxQuantity;
+//    private javax.swing.JTextField minQuantityInput;
+//    private javax.swing.JTextField maxQuantityInput;
+//
+//    private javax.swing.JButton priceFilterButton;
+//    private javax.swing.JLabel price;
+//    private javax.swing.JLabel minPrice;
+//    private javax.swing.JLabel maxPrice;
+//    private javax.swing.JTextField minPriceInput;
+//    private javax.swing.JTextField maxPriceInput;
 
 
 }

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/sql/startup_script.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/sql/views_script.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/sql_files/database.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/sql_files/queriesAndMore.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/sql_files/views.sql" dialect="MySQL" />

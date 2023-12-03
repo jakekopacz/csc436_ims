@@ -20,15 +20,17 @@ public class topBar {
         this.searchInput = new JTextField(30);
         this.topPanel.add(this.searchInput);
 
+        // just an example this needs to change based on table
+        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+
+        JComboBox petList = new JComboBox(petStrings);
+        petList.setSelectedIndex(4);
+        topPanel.add(petList);
+
         this.addButton = new JButton();
         topPanel.add(addButton);
         this.addButton.setText("Search");
 
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mainView.refreshScrollPane("SELECT * FROM item WHERE quantity >= 110 and quantity <= 900");
-            }
-        });
 
 
     }

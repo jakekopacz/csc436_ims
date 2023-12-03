@@ -20,11 +20,21 @@ public class JTableDb {
         jTable = new JTable(DbUtils.resultSetToTableModel(rs))  {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column < 1) {
-                    return false;
-                } else {
-                    return true;
+                if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
+                    if (column < 2) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
+                else {
+                    if (column < 1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+
             }
         };
 
@@ -33,18 +43,6 @@ public class JTableDb {
         jTable.setRowSelectionAllowed(true);
         jTable.setColumnSelectionAllowed(false);
         jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-
-        switch (op) {
-
-            case ITEM:
-                return makeItem(jTable, conn);
-
-        }
-
-        return null;
-    }
-    static private javax.swing.JTable makeItem(JTable jTable, Connection conn) {
 
         jTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
@@ -63,39 +61,45 @@ public class JTableDb {
                 System.out.println(id);
                 System.out.println(data);
 
-                switch (columnName) {
+                switch (op) {
 
-                    case "quantity":
-                        ItemDb.update(conn, id, Integer.parseInt(data.toString()));
+                    case ITEM:
+                        makeItem(conn, columnName, id, data);
                         break;
-                    case "price":
-                        ItemDb.update(conn, id, Double.parseDouble(data.toString()));
+                    case SALES_ORDER:
+                        makeSalesOrder(conn, columnName, id, data);
+                        System.out.println("makeSalesOrder");
                         break;
-                    case "category":
-                        ItemDb.update(conn, id, data.toString());
-                        break;
+                    case REPLENISH_ORDER:
+                        makeReplenishOrder(conn, columnName, id, data);
+
                 }
-
 
             }
         } );
-
+        
         return jTable;
     }
 
-    public void itemTableChangedQuantity(TableModelEvent e) {
+    static private void makeItem(Connection conn, String columnName, int id, Object data) {
 
-        if (e.getColumn() != 1) {
-            return;
+        switch (columnName) {
+            case "quantity" -> ItemDb.update(conn, id, Integer.parseInt(data.toString()));
+            case "price" -> ItemDb.update(conn, id, Double.parseDouble(data.toString()));
+            case "category" -> ItemDb.update(conn, id, data.toString());
         }
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        TableModel model = (TableModel)e.getSource();
-        String columnName = model.getColumnName(column);
-        Object data = model.getValueAt(row, column);
+    }
 
-        System.out.println(columnName);
-        System.out.println(data);
+
+    static private void makeSalesOrder(Connection conn, String columnName, int id, Object data) {
+
+        SalesOrderDb.update(conn, id, columnName, data.toString());
+
+    }
+
+    static private void makeReplenishOrder(Connection conn, String columnName, int id, Object data) {
+
+        ReplenishOrderDb.update(conn, id, columnName, data.toString());
 
     }
 
