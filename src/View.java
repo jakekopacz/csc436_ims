@@ -26,143 +26,248 @@ public class View extends javax.swing.JFrame {
         initComponents(conn);
     }
 
+//    private void initComponents(Connection conn) {
+//
+//	    this.conn = conn;
+//
+//        tablePane = new javax.swing.JScrollPane();
+//        mainPanel = new javax.swing.JPanel();
+//        updatePanel = new javax.swing.JPanel();
+//        buttonInventory = new javax.swing.JButton();
+//        buttonOrders = new javax.swing.JButton();
+//        buttonDeliveries = new javax.swing.JButton();
+//        buttonContacts = new javax.swing.JButton();
+//        buttonAdd = new javax.swing.JButton();
+//	    buttonSubmit = new javax.swing.JButton();
+//	    buttonClose = new javax.swing.JButton();
+//        menuBar = new javax.swing.JMenuBar();
+//        menuFile = new javax.swing.JMenu();
+//        menuEdit = new javax.swing.JMenu();
+//	    textfields = new ArrayList<JTextField>();
+//        topPanel = new topBar(this);
+//        rightSideBar = new RightSideBar(TableOptions.options.ITEM, this);
+//
+//        refreshScrollPane("SELECT * FROM Item");
+//
+//        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+//
+//        menuFile.setText("File");
+//        menuBar.add(menuFile);
+//
+//        menuEdit.setText("Edit");
+//        menuBar.add(menuEdit);
+//
+//        setJMenuBar(menuBar);
+//
+//        buttonInventory.setText("Inventory");
+//        buttonInventory.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                refreshScrollPane("SELECT * FROM Item");
+//            }
+//        });
+//
+//        buttonOrders.setText("Orders");
+//        buttonOrders.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                refreshScrollPane("SELECT * FROM SalesOrder");
+//            }
+//        });
+//
+//        buttonDeliveries.setText("Deliveries");
+//        buttonDeliveries.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                refreshScrollPane("SELECT * FROM ReplenishOrder");
+//            }
+//        });
+//
+//        buttonContacts.setText("Contacts");
+//        buttonContacts.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                refreshScrollPane("SELECT * FROM PhoneList");
+//            }
+//        });
+//
+//	buttonAdd.setText("Add");
+//        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//		        postUpdatePanel();
+//            }
+//        });
+//
+//
+//	buttonSubmit.setText("Submit");
+//        buttonSubmit.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//		ArrayList<String> input = new ArrayList<String>();
+//		for(JTextField text: textfields){
+//			input.add(text.getText());
+//		}
+//		for(String str: input){
+//			System.out.println(str);
+//		}
+//            }
+//        });
+//
+//	buttonClose.setText("Close");
+//        buttonClose.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//		removeUpdatePanel();
+//            }
+//        });
+//
+//	// set component layout; basically order everything in the x-axis, then in the y-axis. for things to be next to each other along an axis, use parallel group
+//	GroupLayout layout = new GroupLayout(mainPanel);
+//	mainPanel.setLayout(layout);
+//	layout.setAutoCreateGaps(true);
+//	layout.setAutoCreateContainerGaps(true);
+//
+//	layout.setHorizontalGroup(
+//        layout.createParallelGroup((GroupLayout.Alignment.LEADING))
+//           .addGroup(layout.createSequentialGroup()
+//              .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+//                   .addComponent(buttonInventory)
+//                   .addComponent(buttonOrders)
+//                   .addComponent(buttonDeliveries)
+//                   .addComponent(buttonContacts)
+//                   .addComponent(buttonAdd))
+//               .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+//              .addComponent(tablePane)
+//                   .addComponent(this.topPanel.getTopBar()))
+//                   .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+//                           .addComponent(this.rightSideBar.getRightSideBar())))
+//           .addComponent(updatePanel)
+//    );
+//
+//	layout.setVerticalGroup(
+//   layout.createParallelGroup()
+//      .addGroup(layout.createSequentialGroup()
+//           .addComponent(buttonInventory)
+//           .addComponent(buttonOrders)
+//           .addComponent(buttonDeliveries)
+//           .addComponent(buttonContacts)
+//           .addComponent(buttonAdd))
+//      .addGroup(layout.createSequentialGroup()
+//              .addComponent(this.topPanel.getTopBar(), 30, 30, 30)
+//           .addComponent(tablePane)
+//           .addComponent(updatePanel))
+//           .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+//                   .addComponent(this.rightSideBar.getRightSideBar()))
+//      );
+//
+//
+//      add(mainPanel);
+//
+//        pack();
+//	setSize(640, 480);
+//    }
 
     private void initComponents(Connection conn) {
-	
-	    this.conn = conn;
 
+        this.conn = conn;
+
+        jTable = new JTable();
         tablePane = new javax.swing.JScrollPane();
         mainPanel = new javax.swing.JPanel();
         updatePanel = new javax.swing.JPanel();
-        buttonInventory = new javax.swing.JButton();
-        buttonOrders = new javax.swing.JButton();
-        buttonDeliveries = new javax.swing.JButton();
-        buttonContacts = new javax.swing.JButton();
-        buttonAdd = new javax.swing.JButton();
-	    buttonSubmit = new javax.swing.JButton();
-	    buttonClose = new javax.swing.JButton();
+        buttonSubmit = new javax.swing.JButton();
+        buttonClose = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuEdit = new javax.swing.JMenu();
-	    textfields = new ArrayList<JTextField>();
+        textfields = new ArrayList<JTextField>();
+        topPanel = new topBar(this);
+        rightSideBar = new RightSideBar(TableOptions.options.ITEM, this);
+        leftSideBar = new LeftSideBar(this);
 
-        refreshScrollPane("SELECT * FROM Item");
+        refreshScrollPane(ItemDb.getAll(this.conn), TableOptions.options.ITEM);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         menuFile.setText("File");
         menuBar.add(menuFile);
-
         menuEdit.setText("Edit");
         menuBar.add(menuEdit);
-
         setJMenuBar(menuBar);
 
-        buttonInventory.setText("Inventory");
-        buttonInventory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshScrollPane("SELECT * FROM Item");
-            }
-        });
 
-        buttonOrders.setText("Orders");
-        buttonOrders.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshScrollPane("SELECT * FROM ItemOrder");
-            }
-        });
-
-        buttonDeliveries.setText("Deliveries");
-        buttonDeliveries.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshScrollPane("SELECT * FROM ReplenishOrder");
-            }
-        });
-
-        buttonContacts.setText("Contacts");
-        buttonContacts.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshScrollPane("SELECT * FROM PhoneList");
-            }
-        });
-
-	buttonAdd.setText("Add");
-        buttonAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-		postUpdatePanel();
-            }
-        });
-
-
-	buttonSubmit.setText("Submit");
+        buttonSubmit.setText("Submit");
         buttonSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-		ArrayList<String> input = new ArrayList<String>();
-		for(JTextField text: textfields){
-			input.add(text.getText());
-		}
-		for(String str: input){
-			System.out.println(str);
-		}
+                ArrayList<String> input = new ArrayList<String>();
+                for(JTextField text: textfields){
+                    input.add(text.getText());
+                }
+                for(String str: input){
+                    System.out.println(str);
+                }
             }
         });
 
-	buttonClose.setText("Close");
+        buttonClose.setText("Close");
         buttonClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-		removeUpdatePanel();
+                removeUpdatePanel();
             }
         });
 
-	// set component layout; basically order everything in the x-axis, then in the y-axis. for things to be next to each other along an axis, use parallel group
-	GroupLayout layout = new GroupLayout(mainPanel);
-	mainPanel.setLayout(layout);
-	layout.setAutoCreateGaps(true);
-	layout.setAutoCreateContainerGaps(true);
+        // set component layout; basically order everything in the x-axis, then in the y-axis. for things to be next to each other along an axis, use parallel group
+        GroupLayout layout = new GroupLayout(mainPanel);
+        mainPanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
-	layout.setHorizontalGroup(
-layout.createParallelGroup((GroupLayout.Alignment.LEADING))
-   .addGroup(layout.createSequentialGroup()
-      .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-           .addComponent(buttonInventory)
-           .addComponent(buttonOrders)
-           .addComponent(buttonDeliveries)
-           .addComponent(buttonContacts)
-           .addComponent(buttonAdd))
-      .addComponent(tablePane))
-   .addComponent(updatePanel)
-      );
+        layout.setHorizontalGroup(
+                layout.createParallelGroup((GroupLayout.Alignment.LEADING))
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(this.leftSideBar.getLeftSideBar()))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(tablePane)
+                                        .addComponent(this.topPanel.getTopBar()))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(this.rightSideBar.getRightSideBar())))
+                        .addComponent(updatePanel)
+        );
 
-	layout.setVerticalGroup(
-   layout.createParallelGroup()
-      .addGroup(layout.createSequentialGroup()
-           .addComponent(buttonInventory)
-           .addComponent(buttonOrders)
-           .addComponent(buttonDeliveries)
-           .addComponent(buttonContacts)
-           .addComponent(buttonAdd))
-      .addGroup(layout.createSequentialGroup()
-	   .addComponent(tablePane)
-	   .addComponent(updatePanel))
-      );
+        layout.setVerticalGroup(
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(this.leftSideBar.getLeftSideBar()))
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(this.topPanel.getTopBar(), 30, 30, 30)
+                                .addComponent(tablePane)
+                                .addComponent(updatePanel))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(this.rightSideBar.getRightSideBar()))
+        );
 
 
-      add(mainPanel);
-
+        add(mainPanel);
         pack();
-	setSize(640, 480);
+        setSize(640, 480);
     }
 
-    private void refreshScrollPane(String arg) {
-        try{
-        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery(arg);
+//    public void refreshScrollPane(String arg) {
+//        try{
+//        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+//        ResultSet rs = stmt.executeQuery(arg);
+//        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn, TableOptions.options.ITEM));
+//        } catch(SQLException ex){
+//            ex.printStackTrace();
+//        }
+//    }
 
-        tablePane.setViewportView(JTableDb.makeJTable(rs, this.conn));
-        } catch(SQLException ex){
-            ex.printStackTrace();
-        }
+    public void refreshScrollPane(ResultSet rs, TableOptions.options op) {
+        this.jTable = JTableDb.makeJTable(rs, this.conn, op);
+        tablePane.setViewportView(this.jTable);
+
+
+        this.rightSideBar.makeSideBar(op, this);
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+
     }
+
+
     private void postUpdatePanel() {
 
         GroupLayout layout = new GroupLayout(updatePanel);
@@ -210,12 +315,23 @@ layout.createParallelGroup((GroupLayout.Alignment.LEADING))
     private javax.swing.JButton buttonAdd;
     private javax.swing.JButton buttonSubmit;
     private javax.swing.JButton buttonClose;
+
     private javax.swing.JMenu menuFile;
     private javax.swing.JMenu menuEdit;
     private javax.swing.JMenuBar menuBar;
+
+
     private javax.swing.JPanel mainPanel;
+
+    private LeftSideBar leftSideBar;
+    private RightSideBar rightSideBar;
+    private topBar topPanel;
+
+
     private javax.swing.JPanel updatePanel;
+    public javax.swing.JTable jTable;
     private javax.swing.JScrollPane tablePane;
-    private Connection conn;
+
+    public Connection conn;
     private java.util.List<JTextField> textfields;
 }

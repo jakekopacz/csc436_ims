@@ -13,19 +13,29 @@ public class JTableDb {
      * @param rs
      * @return JTable
      */
-    static public javax.swing.JTable makeJTable(ResultSet rs, Connection conn) {
+
+    static public javax.swing.JTable makeJTable(ResultSet rs, Connection conn, TableOptions.options op) {
 
         javax.swing.JTable jTable;
         jTable = new JTable(DbUtils.resultSetToTableModel(rs))  {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (column < 1) {
-                    return false;
-                } else {
-                    return true;
+                if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
+                    if (column < 2) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
-            }
+                else {
+                    if (column < 1) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
 
+            }
         };
 
         jTable.getTableHeader().setReorderingAllowed(false); // not allow re-ordering of columns
@@ -37,48 +47,59 @@ public class JTableDb {
         jTable.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
-                if (e.getColumn() != 1) {
-                    return;
-                }
+
                 int row = e.getFirstRow();
                 int column = e.getColumn();
                 TableModel model = (TableModel)e.getSource();
-                String columnName = model.getColumnName(column);
 
-                Object item_id = model.getValueAt(row, 0);
+                Object row_id = model.getValueAt(row, 0);
                 Object data = model.getValueAt(row, column);
 
+                int id = Integer.parseInt(row_id.toString());
+                String columnName = model.getColumnName(column);
 
-                System.out.println(item_id);
+                System.out.println(id);
                 System.out.println(data);
 
-                int id = Integer.parseInt(item_id.toString());
+                switch (op) {
 
+                    case ITEM:
+                        makeItem(conn, columnName, id, data);
+                        break;
+                    case SALES_ORDER:
+                        makeSalesOrder(conn, columnName, id, data);
+                        System.out.println("makeSalesOrder");
+                        break;
+                    case REPLENISH_ORDER:
+                        makeReplenishOrder(conn, columnName, id, data);
 
-                System.out.println(item_id);
-                System.out.println(data);
-
-                ReplenishOrderDb.update(conn, id, "shipping_option", data.toString());
+                }
 
             }
         } );
-
+        
         return jTable;
     }
 
-    public void itemTableChangedQuantity(TableModelEvent e) {
+    static private void makeItem(Connection conn, String columnName, int id, Object data) {
 
-        if (e.getColumn() != 1) {
-            return;
+        switch (columnName) {
+            case "quantity" -> ItemDb.update(conn, id, Integer.parseInt(data.toString()));
+            case "price" -> ItemDb.update(conn, id, Double.parseDouble(data.toString()));
+            case "category" -> ItemDb.update(conn, id, data.toString());
         }
-        int row = e.getFirstRow();
-        int column = e.getColumn();
-        TableModel model = (TableModel)e.getSource();
-        String columnName = model.getColumnName(column);
-        Object data = model.getValueAt(row, column);
+    }
 
-        System.out.println(columnName);
-        System.out.println(data);
+
+    static private void makeSalesOrder(Connection conn, String columnName, int id, Object data) {
+
+        SalesOrderDb.update(conn, id, columnName, data.toString());
+
+    }
+
+    static private void makeReplenishOrder(Connection conn, String columnName, int id, Object data) {
+
+        ReplenishOrderDb.update(conn, id, columnName, data.toString());
 
     }
 

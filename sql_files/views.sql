@@ -12,6 +12,10 @@ create view SalesOrder_total_price(order_id, total_price) as
     FROM order_item_quantity_price
     GROUP BY order_id;
 
+create view SalesOrder_All_Info(order_id, total_price, shipping_option, tracking_num, customer_email) as
+    SELECT SalesOrder.order_id, SalesOrder_total_price.total_price, SalesOrder.shipping_option, SalesOrder.tracking_num, SalesOrder.customer_email
+    FROM SalesOrder LEFT OUTER JOIN SalesOrder_total_price on SalesOrder.order_id = SalesOrder_total_price.order_id;
+
 #Since cost can differ from supplier it is necissary to create a view that has supplier_email and replenish_id in it.
 create view ItemReplenish_supplier_email as 
 	SELECT ItemReplenish.*, ReplenishOrder.supplier_email

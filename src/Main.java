@@ -3,12 +3,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
+
 public class Main{
 
 	static final String URL = "jdbc:mysql://localhost:3306";
 	static final String USER = "root";
 	static final String PASS = "password123";
 	static final String START_SCRIPT = "sql/startup_script.sql";
+	static final String START_VIEW = "sql/views_script.sql";
+
 	
 
 	public static void main(String[] args) throws Exception{
@@ -19,6 +22,7 @@ public class Main{
 		}
 		// run script for creating database and tables
 		new ScriptRunner(conn).runScript(new BufferedReader(new FileReader(START_SCRIPT)));
+		new ScriptRunner(conn).runScript(new BufferedReader(new FileReader(START_VIEW)));
 	        // create view
         	java.awt.EventQueue.invokeLater(new Runnable() {
 	        public void run() {
