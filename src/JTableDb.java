@@ -84,9 +84,15 @@ public class JTableDb {
     static private void makeItem(Connection conn, String columnName, int id, Object data) {
 
         switch (columnName) {
-            case "quantity" -> ItemDb.update(conn, id, Integer.parseInt(data.toString()));
-            case "price" -> ItemDb.update(conn, id, Double.parseDouble(data.toString()));
-            case "category" -> ItemDb.update(conn, id, data.toString());
+		case "quantity": 
+			ItemDb.update(conn, id, Integer.parseInt(data.toString()));
+			break;
+		case "price":
+		       	ItemDb.update(conn, id, Double.parseDouble(data.toString()));
+			break;
+		case "category":
+			ItemDb.update(conn, id, data.toString());
+			break;
         }
     }
 

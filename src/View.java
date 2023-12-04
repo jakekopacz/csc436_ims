@@ -167,7 +167,11 @@ public class View extends javax.swing.JFrame {
 
         jTable = new JTable();
         tablePane = new javax.swing.JScrollPane();
+        tablePaneClickMenu = new javax.swing.JPopupMenu();
+        tablePaneClickUpdate = new javax.swing.JMenuItem("Update");
+        tablePaneClickDelete = new javax.swing.JMenuItem("Delete");
         mainPanel = new javax.swing.JPanel();
+        updatePopup = new javax.swing.JOptionPane();
         updatePanel = new javax.swing.JPanel();
         buttonSubmit = new javax.swing.JButton();
         buttonClose = new javax.swing.JButton();
@@ -188,6 +192,20 @@ public class View extends javax.swing.JFrame {
         menuBar.add(menuEdit);
         setJMenuBar(menuBar);
 
+        tablePaneClickUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postUpdatePanel();
+                updatePopup.showMessageDialog(null, updatePanel, "Update", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+        tablePaneClickDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                postUpdatePanel();
+                updatePopup.showMessageDialog(null, updatePanel, "Delete", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+        tablePaneClickMenu.add(tablePaneClickUpdate);
+        tablePaneClickMenu.add(tablePaneClickDelete);
 
         buttonSubmit.setText("Submit");
         buttonSubmit.addActionListener(new java.awt.event.ActionListener() {
@@ -259,9 +277,16 @@ public class View extends javax.swing.JFrame {
     public void refreshScrollPane(ResultSet rs, TableOptions.options op) {
         this.jTable = JTableDb.makeJTable(rs, this.conn, op);
         tablePane.setViewportView(this.jTable);
-
+        // listener wouldn't persist across refreshes
+        tablePane.getViewport().getView().addMouseListener(new java.awt.event.MouseAdapter() { 
+            public void mousePressed(java.awt.event.MouseEvent me) { 
+                tablePaneClickMenu.show(tablePane.getViewport(), me.getX(), me.getY());
+            } 
+        }); 
 
         this.rightSideBar.makeSideBar(op, this);
+        this.topPanel.makeTopBar();
+
         this.mainPanel.revalidate();
         this.mainPanel.repaint();
 
@@ -329,8 +354,12 @@ public class View extends javax.swing.JFrame {
 
 
     private javax.swing.JPanel updatePanel;
+    private javax.swing.JOptionPane updatePopup;
     public javax.swing.JTable jTable;
-    private javax.swing.JScrollPane tablePane;
+    public javax.swing.JScrollPane tablePane;
+    private javax.swing.JPopupMenu tablePaneClickMenu;
+    private javax.swing.JMenuItem tablePaneClickUpdate;
+    private javax.swing.JMenuItem tablePaneClickDelete;
 
     public Connection conn;
     private java.util.List<JTextField> textfields;

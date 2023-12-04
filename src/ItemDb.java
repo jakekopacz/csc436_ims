@@ -5,7 +5,7 @@ public class ItemDb {
 
     public static void insert(Connection connection, int item_id, int quantity, float price, String category) {
         try {
-            String sql = "INSERT INTO item (item_id, quantity, price, category) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO Item (item_id, quantity, price, category) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, item_id);
             statement.setInt(2, quantity);
@@ -26,7 +26,7 @@ public class ItemDb {
      */
     public static void delete(Connection connection, int item_id) {
         try {
-            String sql = "DELETE FROM item WHERE item_id = ?";
+            String sql = "DELETE FROM Item WHERE item_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, item_id);
 
@@ -51,7 +51,7 @@ public class ItemDb {
      */
     public static void update(Connection connection, int item_id, int quantity) {
         try {
-            String sql = "UPDATE item SET quantity = ? WHERE item_id = ?";
+            String sql = "UPDATE Item SET quantity = ? WHERE item_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, quantity);
             statement.setInt(2, item_id);
@@ -78,7 +78,7 @@ public class ItemDb {
      */
     public static void update(Connection connection, int item_id, double price) {
         try {
-            String sql = "UPDATE item SET price = ? WHERE item_id = ?";
+            String sql = "UPDATE Item SET price = ? WHERE item_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setDouble(1, price);
             statement.setInt(2, item_id);
@@ -97,7 +97,7 @@ public class ItemDb {
 
     public static void update(Connection connection, int item_id, String category) {
         try {
-            String sql = "UPDATE item SET category = ? WHERE item_id = ?";
+            String sql = "UPDATE Item SET category = ? WHERE item_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, category);
             statement.setInt(2, item_id);
@@ -116,7 +116,7 @@ public class ItemDb {
 
     static public ResultSet getAll(Connection connection) {
 
-        String sql = "SELECT * FROM item";
+        String sql = "SELECT * FROM Item";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -136,7 +136,7 @@ public class ItemDb {
     }
     static public ResultSet quantitySearch(int min, int max, Connection connection) {
 
-        String sql = "SELECT * FROM item WHERE quantity >= ? and quantity <= ? ORDER BY quantity;";
+        String sql = "SELECT * FROM Item WHERE quantity >= ? and quantity <= ? ORDER BY quantity;";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -159,7 +159,7 @@ public class ItemDb {
 
     static public ResultSet priceSearch(int min, int max, Connection connection) {
 
-        String sql = "SELECT * FROM item WHERE price >= ? and price <= ? ORDER BY price;";
+        String sql = "SELECT * FROM Item WHERE price >= ? and price <= ? ORDER BY price;";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);

@@ -7,31 +7,30 @@ import java.util.*;
 public class topBar {
 
     private View mainView;
+
     topBar(View view) {
-        makeTopBar();
         this.mainView = view;
-    }
-
-    private void makeTopBar() {
-
         this.topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
         this.searchInput = new JTextField(30);
+        this.searchOptions = new JComboBox<String>();
+        this.searchButton = new JButton();
+        this.searchButton.setText("Search");
+
         this.topPanel.add(this.searchInput);
+        this.topPanel.add(this.searchOptions);
+        this.topPanel.add(searchButton);
 
-        // just an example this needs to change based on table
-        String[] petStrings = { "Bird", "Cat", "Dog", "Rabbit", "Pig" };
+    }
 
-        JComboBox petList = new JComboBox(petStrings);
-        petList.setSelectedIndex(4);
-        topPanel.add(petList);
-
-        this.addButton = new JButton();
-        topPanel.add(addButton);
-        this.addButton.setText("Search");
-
-
+    public void makeTopBar() {
+        
+        this.searchOptions.removeAllItems();
+        
+        for(int i = 0, sz = this.mainView.jTable.getColumnCount(); i < sz; i++){
+            this.searchOptions.addItem(this.mainView.jTable.getColumnName(i));
+        }
 
     }
 
@@ -40,9 +39,8 @@ public class topBar {
     }
 
     private javax.swing.JPanel topPanel;
-    private javax.swing.JButton removeButton;
-    private javax.swing.JButton addButton;
-    private javax.swing.JLabel search;
+    private javax.swing.JButton searchButton;
     private javax.swing.JTextField searchInput;
+    private javax.swing.JComboBox<String> searchOptions;
 
 }
