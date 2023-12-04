@@ -151,7 +151,6 @@ public class ItemDb {
         }
 
         return null;
-
     }
     static public ResultSet quantitySearch(int min, int max, Connection connection) {
 

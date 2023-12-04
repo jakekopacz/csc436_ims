@@ -23,17 +23,19 @@ public class JTableDb {
                 if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
                     if (column < 2) {
                         return false;
-                    } else {
-                        return true;
+                    }
+                }
+                else if (op == TableOptions.options.ITEMIZED_ORDER) {
+                    if (column != 1) {
+                        return false;
                     }
                 }
                 else {
                     if (column < 1) {
                         return false;
-                    } else {
-                        return true;
                     }
                 }
+                return true;
 
             }
         };
@@ -72,6 +74,10 @@ public class JTableDb {
                         break;
                     case REPLENISH_ORDER:
                         makeReplenishOrder(conn, columnName, id, data);
+                    case CUSTOMER:
+                        break;
+                    case SUPPLIER:
+                        break;
 
                 }
 

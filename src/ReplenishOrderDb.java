@@ -97,4 +97,25 @@ public class ReplenishOrderDb {
         return null;
 
     }
+
+//    static public ResultSet getItemized(Connection conn, int order_id) {
+//
+//        String sql = "SELECT * FROM ReplenishOrder_All_Info";
+//
+//        try {
+//            PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+//            ResultSet rs = pstmnt.executeQuery();
+//
+////            rs.close();
+////            pstmnt.close();
+//            System.out.println("Search GOOD");
+//            return rs;
+//        } catch (SQLException e) {
+//            System.err.println(e.getMessage());
+//        }
+//
+//        return null;
+//
+//
+//    }
 }

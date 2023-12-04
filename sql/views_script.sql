@@ -49,6 +49,9 @@ create or replace view item_number_of_suppliers(item_id, suppliers) as
 SELECT item_id, count(supplier_email) FROM SupplierList
 group by item_id;
 
+create or replace view customer_details(customer_email, address_1, address_2, address_3, city, state, country, postal_code) as
+SELECT Customer.email, address_1, address_2, address_3, city, state, country, postal_code
+FROM Customer LEFT OUTER JOIN MailingList ML on Customer.email = ML.customer_email;
 
 
   

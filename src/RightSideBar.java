@@ -39,6 +39,14 @@ public class RightSideBar {
             case REPLENISH_ORDER:
                 makeReplenishOrderBar(view);
                 break;
+            case CUSTOMER:
+                break;
+            case SUPPLIER:
+                break;
+            case ITEMIZED_ORDER:
+                break;
+            case ITEMIZED_DELIVERY:
+                break;
         }
         this.panel.revalidate();
         this.panel.repaint();
@@ -138,40 +146,62 @@ public class RightSideBar {
             }
         });
 
+        removeItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Warning: Deleting item " + id + " will remove it from all orders/deliveries", "Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    DatabaseManager.deleteItem(view.conn, id);
+                    view.refreshScrollPane(ItemDb.getAll(view.conn), TableOptions.options.ITEM);
+                }
+            }
+        });
+
+
     }
 
     private void makeSalesOrderBar(View view) {
 
 
-        this.seeDetails = new JButton("Order Details");
+        this.seeDetails = new JButton("Itemized Details");
         seeDetails.setMaximumSize(new Dimension(80, 40));
         this.addOrder = new JButton("Add Order");
         addOrder.setMaximumSize(new Dimension(80, 40));
         this.removeOrder = new JButton("Remove Order");
         removeOrder.setMaximumSize(new Dimension(80, 40));
-        this.fulfillOrder = new JButton("Fulfill Order");
+        this.fulfillOrder = new JButton("Order Fulfilled");
         fulfillOrder.setMaximumSize(new Dimension(80, 40));
 
+
+        // todo
         seeDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-                // need a popup window of a Jscroll Pane
-                // call upon view.jtable.getSelected();
-                // calls order_item_quantity_price where order_id = selected order_id
-                // pop up window needs to allow add / remove of items
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_ORDER);
+
             }
         });
+
+        // todo
         addOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-                // need a popup window of a Jscroll Pane
-                // call upon view.jtable.getSelected();
-                // calls order_item_quantity_price where order_id = selected order_id
-                // pop up window needs to allow add / remove of items
             }
         });
-
-
+        //done
         removeOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -190,6 +220,8 @@ public class RightSideBar {
                 }
             }
         });
+
+        //done
         fulfillOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -230,7 +262,7 @@ public class RightSideBar {
     private void makeReplenishOrderBar(View view) {
 
 
-        this.seeDetailsRep = new JButton("Delivery Details");
+        this.seeDetailsRep = new JButton("Itemized Details");
         seeDetailsRep.setMaximumSize(new Dimension(80, 40));
         this.addDelivery = new JButton("Add Delivery");
         addDelivery.setMaximumSize(new Dimension(80, 40));
@@ -239,6 +271,7 @@ public class RightSideBar {
         this.fulfillDelivery = new JButton("Delivery Received");
         fulfillDelivery.setMaximumSize(new Dimension(80, 40));
 
+        // todo
         seeDetailsRep.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -248,6 +281,8 @@ public class RightSideBar {
                 // pop up window needs to allow add / remove of items
             }
         });
+
+        // todo
         addDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -258,6 +293,7 @@ public class RightSideBar {
             }
         });
 
+        // done
         removeDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -279,6 +315,8 @@ public class RightSideBar {
 
             }
         });
+
+        // done
         fulfillDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -314,6 +352,17 @@ public class RightSideBar {
                 4, 1, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
+
+    }
+
+    private void makeSalesOrderItemizedBar(View view) {
+
+        this.back = new JButton("Back");
+        back.setMaximumSize(new Dimension(80, 40));
+        this.addOrderItem = new JButton("Add Delivery");
+        addDelivery.setMaximumSize(new Dimension(80, 40));
+        this.removeOrderItem = new JButton("Remove Delivery");
+        removeDelivery.setMaximumSize(new Dimension(80, 40));
 
     }
 
@@ -353,7 +402,12 @@ public class RightSideBar {
     private javax.swing.JButton seeDetailsRep;
     private javax.swing.JButton addDelivery;
     private javax.swing.JButton removeDelivery;
-    private javax.swing.JPanel pop;
+
+
+    // Itemized Order Components
+    private javax.swing.JButton back;
+    private javax.swing.JButton addOrderItem;
+    private javax.swing.JButton removeOrderItem;
 
 }
 

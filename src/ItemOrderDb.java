@@ -66,6 +66,24 @@ public class ItemOrderDb {
         }
     }
 
+    public static void deleteItemFromAllOrders(Connection connection, int item_id) {
+        try {
+            String sql = "DELETE FROM ItemOrder WHERE item_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, item_id);
+
+            int rowsAffected = statement.executeUpdate();
+            connection.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item removed successfully.");
+            } else {
+                System.out.println("Item not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     static public ResultSet getAllItemsInOrder(Connection connection, int order_id) {
 
         String sql = "SELECT item_id, quantity FROM ItemOrder WHERE order_id = ? ";

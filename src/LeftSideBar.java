@@ -53,6 +53,18 @@ public class LeftSideBar {
             }
         });
 
+        buttonCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view.refreshScrollPane(CustomerDb.getAll(view.conn), TableOptions.options.CUSTOMER);
+            }
+        });
+
+        buttonSuppliers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view.refreshScrollPane(SupplierDb.getAll(view.conn), TableOptions.options.SUPPLIER);
+            }
+        });
+
     }
 
     public JPanel getLeftSideBar() {

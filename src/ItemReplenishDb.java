@@ -49,6 +49,7 @@ public class ItemReplenishDb {
      * @param replenish_id
      */
     public static void delete(Connection connection, int replenish_id) {
+
         try {
             String sql = "DELETE FROM ItemReplenish WHERE replenish_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -66,6 +67,23 @@ public class ItemReplenishDb {
         }
     }
 
+    public static void deleteItemFromAllOrders(Connection connection, int item_id) {
+        try {
+            String sql = "DELETE FROM ItemReplenish WHERE item_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, item_id);
+
+            int rowsAffected = statement.executeUpdate();
+            connection.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item removed successfully.");
+            } else {
+                System.out.println("Item not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     static public ResultSet getAllItemsInReplenish(Connection connection, int replenish_id) {
 
         String sql = "SELECT item_id, quantity FROM ItemReplenish WHERE replenish_id = ? ";
