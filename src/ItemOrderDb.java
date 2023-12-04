@@ -17,6 +17,29 @@ public class ItemOrderDb {
         }
     }
 
+    public static void update(Connection connection, int quantity, int order_id, int item_id) {
+        try {
+            String sql = "UPDATE ItemOrder SET quantity = ? WHERE order_id = ? AND item_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, quantity);
+            statement.setInt(2, order_id);
+            statement.setInt(3, item_id);
+
+            int rowsAffected = statement.executeUpdate();
+            connection.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item modified successfully");
+            } else {
+                System.out.println("Item not found.");
+            }
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * delete specific item in an order
      * @param connection

@@ -97,7 +97,8 @@ public class SalesOrderDb {
 
     static public ResultSet getAllItemized(Connection conn, int order_id) {
 
-        String sql = "SELECT item_id, quantity, price, total_price FROM order_item_quantity_price WHERE order_id = ?";
+        //String sql = "SELECT item_id, quantity, price, total_price FROM order_item_quantity_price WHERE order_id = ?";
+        String sql = "SELECT * FROM order_item_quantity_price WHERE order_id = ?";
 
         try {
             PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);

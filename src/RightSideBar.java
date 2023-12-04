@@ -14,12 +14,6 @@ public class RightSideBar {
             case ITEM:
                 makeItemBar(view);
                 break;
-            case SALES_ORDER:
-                makeSalesOrderBar(view);
-                break;
-            case REPLENISH_ORDER:
-                makeReplenishOrderBar(view);
-                break;
         }
 
     }
@@ -43,15 +37,26 @@ public class RightSideBar {
                 break;
             case SUPPLIER:
                 break;
+        }
+        this.panel.revalidate();
+        this.panel.repaint();
+        System.out.println("RightSideBar Called");
+
+    }
+
+    public void makeSideBar(TableOptions.options op, View view, int id) {
+
+        this.panel.removeAll();
+
+        switch (op) {
             case ITEMIZED_ORDER:
+                makeSalesOrderItemizedBar(view, id);
                 break;
             case ITEMIZED_DELIVERY:
                 break;
         }
         this.panel.revalidate();
         this.panel.repaint();
-        System.out.println("RightSideBar Called");
-
     }
 
     private void makeItemBar(View view) {
@@ -181,7 +186,7 @@ public class RightSideBar {
         fulfillOrder.setMaximumSize(new Dimension(80, 40));
 
 
-        // todo
+        // Done
         seeDetails.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -190,7 +195,7 @@ public class RightSideBar {
                 }
                 int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
 
-                view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_ORDER);
+                view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_ORDER, id);
 
             }
         });
@@ -311,8 +316,6 @@ public class RightSideBar {
                     view.refreshScrollPane(ReplenishOrderDb.getAll(view.conn), TableOptions.options.REPLENISH_ORDER);
                 }
 
-                System.out.println(view.jTable.getValueAt(view.jTable.getSelectedRow(),0));
-
             }
         });
 
@@ -355,14 +358,58 @@ public class RightSideBar {
 
     }
 
-    private void makeSalesOrderItemizedBar(View view) {
+    private void makeSalesOrderItemizedBar(View view, int order_id) {
 
         this.back = new JButton("Back");
         back.setMaximumSize(new Dimension(80, 40));
-        this.addOrderItem = new JButton("Add Delivery");
-        addDelivery.setMaximumSize(new Dimension(80, 40));
-        this.removeOrderItem = new JButton("Remove Delivery");
-        removeDelivery.setMaximumSize(new Dimension(80, 40));
+        this.addOrderItem = new JButton("Add Item");
+        addOrderItem.setMaximumSize(new Dimension(80, 40));
+        this.removeOrderItem = new JButton("Remove Item");
+        removeOrderItem.setMaximumSize(new Dimension(80, 40));
+
+        //DONE
+        back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view.refreshScrollPane(SalesOrderDb.getAll(view.conn), TableOptions.options.SALES_ORDER);
+            }
+        });
+
+        addOrderItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                JTextField item_id = new JTextField(5);
+                JTextField quantity = new JTextField(5);
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("Item ID:"));
+                myPanel.add(item_id);
+                myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+                myPanel.add(new JLabel("Quantity:"));
+                myPanel.add(quantity);
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    ItemOrderDb.insert(view.conn, order_id, Integer.parseInt(item_id.getText()), Integer.parseInt(quantity.getText()));
+                    view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, order_id), TableOptions.options.ITEMIZED_ORDER, order_id);
+                }
+            }
+        });
+
+
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(this.back);
+        this.panel.add(this.addOrderItem);
+        this.panel.add(this.removeOrderItem);
+
+        SpringUtilities.makeCompactGrid(panel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
 
     }
 

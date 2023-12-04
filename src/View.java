@@ -292,6 +292,24 @@ public class View extends javax.swing.JFrame {
 
     }
 
+    public void refreshScrollPane(ResultSet rs, TableOptions.options op, int id) {
+        this.jTable = JTableDb.makeJTable(rs, this.conn, op);
+        tablePane.setViewportView(this.jTable);
+        // listener wouldn't persist across refreshes
+//        tablePane.getViewport().getView().addMouseListener(new java.awt.event.MouseAdapter() {
+//            public void mousePressed(java.awt.event.MouseEvent me) {
+//                tablePaneClickMenu.show(tablePane.getViewport(), me.getX(), me.getY());
+//            }
+//        });
+
+        this.rightSideBar.makeSideBar(op, this, id);
+        this.topPanel.makeTopBar();
+
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+
+    }
+
 
     private void postUpdatePanel() {
 

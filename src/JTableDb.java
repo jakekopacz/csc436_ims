@@ -26,7 +26,7 @@ public class JTableDb {
                     }
                 }
                 else if (op == TableOptions.options.ITEMIZED_ORDER) {
-                    if (column != 1) {
+                    if (column != 2) {
                         return false;
                     }
                 }
@@ -70,7 +70,6 @@ public class JTableDb {
                         break;
                     case SALES_ORDER:
                         makeSalesOrder(conn, columnName, id, data);
-                        System.out.println("makeSalesOrder");
                         break;
                     case REPLENISH_ORDER:
                         makeReplenishOrder(conn, columnName, id, data);
@@ -78,6 +77,11 @@ public class JTableDb {
                         break;
                     case SUPPLIER:
                         break;
+                    case ITEMIZED_ORDER:
+                        int item_id = Integer.parseInt(model.getValueAt(row, 1).toString());
+                        makeItemizedOrder(conn, Integer.parseInt(data.toString()), id, item_id);
+
+
 
                 }
 
@@ -110,8 +114,11 @@ public class JTableDb {
     }
 
     static private void makeReplenishOrder(Connection conn, String columnName, int id, Object data) {
-
         ReplenishOrderDb.update(conn, id, columnName, data.toString());
+    }
+
+    static private void makeItemizedOrder(Connection conn, int quantity,  int order_id, int item_id) {
+        ItemOrderDb.update(conn, quantity, order_id, item_id);
 
     }
 
