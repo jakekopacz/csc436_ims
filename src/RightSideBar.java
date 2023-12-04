@@ -17,10 +17,14 @@ public class RightSideBar {
             case SALES_ORDER:
                 makeSalesOrderBar(view);
                 break;
+            case REPLENISH_ORDER:
+                makeReplenishOrderBar(view);
+                break;
         }
 
     }
 
+    // TO - DO Work on layout of components
     public void makeSideBar(TableOptions.options op, View view) {
 
         this.panel.removeAll();
@@ -30,13 +34,15 @@ public class RightSideBar {
                 makeItemBar(view);
                 break;
             case SALES_ORDER:
-                System.out.println("SalesOrderBar");
                 makeSalesOrderBar(view);
+                break;
+            case REPLENISH_ORDER:
+                makeReplenishOrderBar(view);
                 break;
         }
         this.panel.revalidate();
         this.panel.repaint();
-        System.out.println("SalesOrderBarLL");
+        System.out.println("RightSideBar Called");
 
     }
 
@@ -62,8 +68,8 @@ public class RightSideBar {
 
         this.quantityFilterButton = new JButton("Filter");
         this.priceFilterButton = new JButton("Filter");
-
-
+        this.addItem = new JButton("Add Item");
+        this.removeItem = new JButton("Remove Item");
 
 
         SpringLayout layout = new SpringLayout();
@@ -80,9 +86,11 @@ public class RightSideBar {
         this.panel.add(maxPriceInput);
         this.panel.add(quantityFilterButton);
         this.panel.add(priceFilterButton);
+        this.panel.add(addItem);
+        this.panel.add(removeItem);
 
         SpringUtilities.makeCompactGrid(panel,
-                6, 2, //rows, cols
+                7, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -137,8 +145,23 @@ public class RightSideBar {
 
         this.seeDetails = new JButton("Order Details");
         seeDetails.setMaximumSize(new Dimension(80, 40));
+        this.addOrder = new JButton("Add Order");
+        addOrder.setMaximumSize(new Dimension(80, 40));
+        this.removeOrder = new JButton("Remove Order");
+        removeOrder.setMaximumSize(new Dimension(80, 40));
+        this.fulfillOrder = new JButton("Fulfill Order");
+        fulfillOrder.setMaximumSize(new Dimension(80, 40));
 
-        priceFilterButton.addActionListener(new java.awt.event.ActionListener() {
+        seeDetails.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                // need a popup window of a Jscroll Pane
+                // call upon view.jtable.getSelected();
+                // calls order_item_quantity_price where order_id = selected order_id
+                // pop up window needs to allow add / remove of items
+            }
+        });
+        addOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
                 // need a popup window of a Jscroll Pane
@@ -148,14 +171,147 @@ public class RightSideBar {
             }
         });
 
+
+        removeOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delete Order " + id,"Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    DatabaseManager.removeSalesOrder(view.conn, id);
+                    view.refreshScrollPane(SalesOrderDb.getAll(view.conn), TableOptions.options.SALES_ORDER);
+                }
+            }
+        });
+        fulfillOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Order " + id + " Sent?","Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    DatabaseManager.fulfillSalesOrder(view.conn, id);
+                    view.refreshScrollPane(SalesOrderDb.getAll(view.conn), TableOptions.options.SALES_ORDER);
+
+                }
+            }
+        });
+
         SpringLayout layout = new SpringLayout();
         this.panel.setLayout(layout);
         this.panel.add(this.seeDetails);
+        this.panel.add(this.addOrder);
+        this.panel.add(this.removeOrder);
+        this.panel.add(this.fulfillOrder);
+
 
 
 
         SpringUtilities.makeCompactGrid(panel,
-                1, 1, //rows, cols
+                4, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
+    }
+
+    private void makeReplenishOrderBar(View view) {
+
+
+        this.seeDetailsRep = new JButton("Delivery Details");
+        seeDetailsRep.setMaximumSize(new Dimension(80, 40));
+        this.addDelivery = new JButton("Add Delivery");
+        addDelivery.setMaximumSize(new Dimension(80, 40));
+        this.removeDelivery = new JButton("Remove Delivery");
+        removeDelivery.setMaximumSize(new Dimension(80, 40));
+        this.fulfillDelivery = new JButton("Delivery Received");
+        fulfillDelivery.setMaximumSize(new Dimension(80, 40));
+
+        seeDetailsRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                // need a popup window of a Jscroll Pane
+                // call upon view.jtable.getSelected();
+                // calls order_item_quantity_price where order_id = selected order_id
+                // pop up window needs to allow add / remove of items
+            }
+        });
+        addDelivery.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                // need a popup window of a Jscroll Pane
+                // call upon view.jtable.getSelected();
+                // calls order_item_quantity_price where order_id = selected order_id
+                // pop up window needs to allow add / remove of items
+            }
+        });
+
+        removeDelivery.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delete Delivery " + id,"Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    DatabaseManager.removeReplenishOrder(view.conn, id);
+                    view.refreshScrollPane(ReplenishOrderDb.getAll(view.conn), TableOptions.options.REPLENISH_ORDER);
+                }
+
+                System.out.println(view.jTable.getValueAt(view.jTable.getSelectedRow(),0));
+
+            }
+        });
+        fulfillDelivery.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delivery " + id + " Received?","Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    DatabaseManager.fulfillReplenishOrder(view.conn, id);
+                    view.refreshScrollPane(ReplenishOrderDb.getAll(view.conn), TableOptions.options.REPLENISH_ORDER);
+
+                }
+
+            }
+        });
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(this.seeDetailsRep);
+        this.panel.add(this.addDelivery);
+        this.panel.add(this.removeDelivery);
+        this.panel.add(this.fulfillDelivery);
+
+
+
+
+        SpringUtilities.makeCompactGrid(panel,
+                4, 1, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -183,21 +339,21 @@ public class RightSideBar {
     private javax.swing.JTextField minPriceInput;
     private javax.swing.JTextField maxPriceInput;
 
-    // SALES_ORDER COMPONENTS
-    private javax.swing.JButton seeDetails;
-//    private javax.swing.JLabel quantity;
-//    private javax.swing.JLabel minQuantity;
-//    private javax.swing.JLabel maxQuantity;
-//    private javax.swing.JTextField minQuantityInput;
-//    private javax.swing.JTextField maxQuantityInput;
-//
-//    private javax.swing.JButton priceFilterButton;
-//    private javax.swing.JLabel price;
-//    private javax.swing.JLabel minPrice;
-//    private javax.swing.JLabel maxPrice;
-//    private javax.swing.JTextField minPriceInput;
-//    private javax.swing.JTextField maxPriceInput;
+    private javax.swing.JButton addItem;
+    private javax.swing.JButton removeItem;
 
+    // SALES_ORDER COMPONENTS
+    private javax.swing.JButton fulfillOrder;
+    private javax.swing.JButton seeDetails;
+    private javax.swing.JButton addOrder;
+    private javax.swing.JButton removeOrder;
+
+    // REPLENISH_ORDER COMPONENTS
+    private javax.swing.JButton fulfillDelivery;
+    private javax.swing.JButton seeDetailsRep;
+    private javax.swing.JButton addDelivery;
+    private javax.swing.JButton removeDelivery;
+    private javax.swing.JPanel pop;
 
 }
 

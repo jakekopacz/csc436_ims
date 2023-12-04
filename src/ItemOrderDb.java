@@ -17,7 +17,6 @@ public class ItemOrderDb {
         }
     }
 
-
     /**
      * delete specific item in an order
      * @param connection
@@ -43,6 +42,7 @@ public class ItemOrderDb {
         }
     }
 
+
     /**
      * delete all items in an order
      * @param connection
@@ -64,6 +64,27 @@ public class ItemOrderDb {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    static public ResultSet getAllItemsInOrder(Connection connection, int order_id) {
+
+        String sql = "SELECT item_id, quantity FROM ItemOrder WHERE order_id = ? ";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql);
+            pstmnt.setInt(1, order_id);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
     }
 
 }

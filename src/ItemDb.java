@@ -114,6 +114,25 @@ public class ItemDb {
         }
     }
 
+    public static void incriment(Connection connection, int item_id, int change) {
+        try {
+            String sql = "UPDATE Item SET quantity = (quantity + ?) WHERE item_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, change);
+            statement.setInt(2, item_id);
+
+            int rowsAffected = statement.executeUpdate();
+            connection.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item modified successfully.");
+            } else {
+                System.out.println("Item not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     static public ResultSet getAll(Connection connection) {
 
         String sql = "SELECT * FROM Item";

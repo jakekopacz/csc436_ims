@@ -66,4 +66,26 @@ public class ItemReplenishDb {
         }
     }
 
+    static public ResultSet getAllItemsInReplenish(Connection connection, int replenish_id) {
+
+        String sql = "SELECT item_id, quantity FROM ItemReplenish WHERE replenish_id = ? ";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql);
+            pstmnt.setInt(1, replenish_id);
+            ResultSet rs = pstmnt.executeQuery();
+
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
 }

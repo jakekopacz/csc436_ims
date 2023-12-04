@@ -12,8 +12,6 @@ public class Main{
 	static final String START_SCRIPT = "sql/startup_script.sql";
 	static final String START_VIEW = "sql/views_script.sql";
 
-	
-
 	public static void main(String[] args) throws Exception{
 		// connect to db
 		Connection conn = getConnection();
