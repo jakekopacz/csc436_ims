@@ -10,15 +10,12 @@ public class RightSideBar {
 
         this.panel = new JPanel();
 
-        switch (op) {
-            case ITEM:
-                makeItemBar(view);
-                break;
-        }
+        makeItemBar(view);
+
 
     }
 
-    // TO - DO Work on layout of components
+
     public void makeSideBar(TableOptions.options op, View view) {
 
         this.panel.removeAll();
@@ -54,6 +51,9 @@ public class RightSideBar {
                 break;
             case ITEMIZED_DELIVERY:
                 break;
+            case ITEM_SUPPLIER:
+                makeItemSupplierBar(view, id);
+                break;
         }
         this.panel.revalidate();
         this.panel.repaint();
@@ -84,6 +84,8 @@ public class RightSideBar {
         this.addItem = new JButton("Add Item");
         this.removeItem = new JButton("Remove Item");
 
+        this.seeSuppliers = new JButton("Suppliers");
+
 
         SpringLayout layout = new SpringLayout();
         this.panel.setLayout(layout);
@@ -101,9 +103,11 @@ public class RightSideBar {
         this.panel.add(priceFilterButton);
         this.panel.add(addItem);
         this.panel.add(removeItem);
+        this.panel.add(seeSuppliers);
+        this.panel.add(new JLabel("WW"));
 
         SpringUtilities.makeCompactGrid(panel,
-                7, 2, //rows, cols
+                8, 2, //rows, cols
                 6, 6,        //initX, initY
                 6, 6);       //xPad, yPad
 
@@ -170,7 +174,58 @@ public class RightSideBar {
             }
         });
 
+        addItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
 
+                JTextField item_id = new JTextField(10);
+                JTextField quantity = new JTextField(10);
+                JTextField price = new JTextField(10);
+                JTextField category = new JTextField(10);
+
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("ID:"));
+                myPanel.add(item_id);
+                myPanel.add(Box.createVerticalStrut(10));
+                myPanel.add(new JLabel("Quantity:"));
+                myPanel.add(quantity);
+                myPanel.add(Box.createVerticalStrut(10));
+                myPanel.add(new JLabel("Price:"));
+                myPanel.add(price);
+                myPanel.add(new JLabel("Description:"));
+                myPanel.add(category);
+
+
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+
+
+                if (result == JOptionPane.OK_OPTION) {
+                    int id = Integer.parseInt(item_id.getText());
+                    int quant = Integer.parseInt(quantity.getText());
+                    double prc = Double.parseDouble(price.getText());
+                    String cat = category.getText();
+                    ItemDb.insert(view.conn, id, quant, prc, cat);
+                    view.refreshScrollPane(ItemDb.getAll(view.conn), TableOptions.options.ITEM);
+                }
+
+            }
+        });
+
+        seeSuppliers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                view.refreshScrollPane(SupplierListDb.getAll(view.conn, id), TableOptions.options.ITEM_SUPPLIER, id);
+
+            }
+        });
     }
 
     private void makeSalesOrderBar(View view) {
@@ -203,6 +258,38 @@ public class RightSideBar {
         // todo
         addOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                JTextField order_id = new JTextField(5);
+                JTextField shipping_option = new JTextField(5);
+                JTextField cemail = new JTextField(5);
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("Order ID:"));
+                myPanel.add(order_id);
+                myPanel.add(Box.createHorizontalStrut(10));
+                myPanel.add(new JLabel("Shipping Option:"));
+                myPanel.add(shipping_option);
+                myPanel.add(Box.createHorizontalStrut(10)); // a spacer
+                myPanel.add(new JLabel("Customer Email:"));
+                myPanel.add(cemail);
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    int o_id = Integer.parseInt(order_id.getText());
+
+                    SalesOrderDb.insert(view.conn, o_id, shipping_option.getText(), "123Ship", cemail.getText());
+                    view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, o_id), TableOptions.options.ITEMIZED_ORDER, o_id);
+                }
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_ORDER, id);
+
 
             }
         });
@@ -383,7 +470,7 @@ public class RightSideBar {
                 JPanel myPanel = new JPanel();
                 myPanel.add(new JLabel("Item ID:"));
                 myPanel.add(item_id);
-                myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+                myPanel.add(Box.createHorizontalStrut(10));
                 myPanel.add(new JLabel("Quantity:"));
                 myPanel.add(quantity);
 
@@ -413,6 +500,89 @@ public class RightSideBar {
 
     }
 
+    private void makeItemSupplierBar(View view, int item_id) {
+        System.out.println("YES");
+        this.addSupplier = new JButton("Add Supplier");
+        this.removeSupplier = new JButton("Remove Supplier");
+        JButton backButton = new JButton("Back");
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(backButton);
+        this.panel.add(addSupplier);
+        this.panel.add(removeSupplier);
+
+        SpringUtilities.makeCompactGrid(panel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view.refreshScrollPane(ItemDb.getAll(view.conn), TableOptions.options.ITEM);
+            }
+        });
+
+        removeSupplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                String id = view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString();
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delete Supplier " + id,"Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    SupplierListDb.removeSupplier(view.conn, id);
+                    view.refreshScrollPane(SupplierListDb.getAll(view.conn, item_id), TableOptions.options.ITEM_SUPPLIER,item_id);
+                }
+
+            }
+        });
+
+        addSupplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                JComboBox<String> suppliers = new JComboBox<String>();
+                AutoCompletion.enable(suppliers);
+                ResultSet rs = SupplierDb.getAll(view.conn);
+
+                try {
+                    while (rs.next()) {
+                        suppliers.addItem(rs.getString("email"));
+                        System.out.println(rs.getString("email"));
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                JTextField cost = new JTextField(5);
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("Supplier:"));
+                myPanel.add(suppliers);
+                myPanel.add(new JLabel("Cost:"));
+                myPanel.add(cost);
+
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String sup = suppliers.getSelectedItem().toString();
+                    Double c = Double.parseDouble(cost.getText());
+
+                    SupplierListDb.insert(view.conn, c, sup, item_id);
+                    view.refreshScrollPane(SupplierListDb.getAll(view.conn, item_id), TableOptions.options.ITEM_SUPPLIER, item_id);
+                }
+
+            }
+        });
+
+    }
     public JPanel getRightSideBar() {
         return this.panel;
 
@@ -437,6 +607,7 @@ public class RightSideBar {
 
     private javax.swing.JButton addItem;
     private javax.swing.JButton removeItem;
+    private javax.swing.JButton seeSuppliers;
 
     // SALES_ORDER COMPONENTS
     private javax.swing.JButton fulfillOrder;
@@ -456,6 +627,25 @@ public class RightSideBar {
     private javax.swing.JButton addOrderItem;
     private javax.swing.JButton removeOrderItem;
 
+    // Item Supplier
+    javax.swing.JButton addSupplier;
+    javax.swing.JButton removeSupplier;
+
 }
 
-
+//
+//    JComboBox<String> supplier = new JComboBox<String>();
+//
+//    ResultSet rs = SupplierDb.getAll(view.conn);
+//
+//                while (true) {
+//                        try {
+//                        if (!rs.next()) {
+//                        supplier.addItem(rs.getString("email"));
+//                        }
+//                        break;
+//                        } catch (SQLException e) {
+//                        throw new RuntimeException(e);
+//                        }
+//
+//                        }

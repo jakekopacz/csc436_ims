@@ -25,6 +25,12 @@ public class DatabaseManager {
 
     }
 
+    public static void deleteSupplier(Connection conn, String email) {
+        SupplierListDb.removeSupplier(conn, email);
+        SupplierDb.removeSupplier(conn, email);
+
+    }
+
     // Add order to SalesOrder
     // Add order's items to ItemOrder
     public static void addSalesOrder(Connection conn, int order_id, String shipping_option, String tracking_num, String customer_email, ArrayList<Integer> item_ids, ArrayList<Integer> item_quantities) {

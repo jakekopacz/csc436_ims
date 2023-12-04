@@ -6,6 +6,25 @@ import java.sql.SQLException;
 public class SupplierDb {
     static public ResultSet getAll(Connection connection) {
 
+        String sql = "SELECT email FROM Supplier";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    static public ResultSet getAllCols(Connection connection) {
+
         String sql = "SELECT * FROM Supplier";
 
         try {
@@ -21,5 +40,26 @@ public class SupplierDb {
         }
 
         return null;
+    }
+
+    public static void removeSupplier(Connection conn, String email) {
+
+        //removeSupplier(conn, item_id);
+
+        try {
+            String sql = "DELETE FROM Supplier WHERE email = ?";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, email);
+
+            int rowsAffected = statement.executeUpdate();
+            conn.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item removed successfully.");
+            } else {
+                System.out.println("Item not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

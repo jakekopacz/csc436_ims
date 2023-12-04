@@ -1,3 +1,4 @@
+
 public class TableOptions {
     public enum options { // specifies each table
         ITEM,
@@ -7,10 +8,8 @@ public class TableOptions {
         REPLENISH_ORDER,
         SUPPLIER_LIST,
         ITEMIZED_ORDER,
-        ITEMIZED_DELIVERY
+        ITEMIZED_DELIVERY,
+        ITEM_SUPPLIER
     }
 
-    public enum itemColumns { // specifies each table
-
-    }
 }

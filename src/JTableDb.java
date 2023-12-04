@@ -20,7 +20,11 @@ public class JTableDb {
         jTable = new JTable(DbUtils.resultSetToTableModel(rs))  {
             @Override
             public boolean isCellEditable(int row, int column) {
-                if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
+
+                if (op == TableOptions.options.ITEM_SUPPLIER) {
+                    return false;
+                }
+                else if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
                     if (column < 2) {
                         return false;
                     }

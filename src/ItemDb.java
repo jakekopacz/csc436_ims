@@ -3,13 +3,13 @@ import java.sql.*;
 
 public class ItemDb {
 
-    public static void insert(Connection connection, int item_id, int quantity, float price, String category) {
+    public static void insert(Connection connection, int item_id, int quantity, double price, String category) {
         try {
             String sql = "INSERT INTO Item (item_id, quantity, price, category) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, item_id);
             statement.setInt(2, quantity);
-            statement.setFloat(3, price);
+            statement.setDouble(3, price);
             statement.setString(4, category);
             statement.executeUpdate();
             connection.commit();

@@ -61,7 +61,7 @@ public class LeftSideBar {
 
         buttonSuppliers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view.refreshScrollPane(SupplierDb.getAll(view.conn), TableOptions.options.SUPPLIER);
+                view.refreshScrollPane(SupplierDb.getAllCols(view.conn), TableOptions.options.SUPPLIER);
             }
         });
 

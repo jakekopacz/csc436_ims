@@ -7,6 +7,7 @@ create table if not exists Customer (
     primary key(email)
 );
 
+
 create table if not exists Supplier (
     email varchar(32),
     account_balance numeric(8,2),
