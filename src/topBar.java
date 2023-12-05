@@ -21,7 +21,6 @@ public class topBar {
         this.topPanel.add(this.searchInput);
         this.topPanel.add(this.searchOptions);
         this.topPanel.add(searchButton);
-
     }
 
     public void makeTopBar() {

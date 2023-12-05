@@ -50,6 +50,7 @@ public class RightSideBar {
                 makeSalesOrderItemizedBar(view, id);
                 break;
             case ITEMIZED_DELIVERY:
+                makeReplenishOrderItemizedBar(view, id);
                 break;
             case ITEM_SUPPLIER:
                 makeItemSupplierBar(view, id);
@@ -255,7 +256,7 @@ public class RightSideBar {
             }
         });
 
-        // todo
+        // done
         addOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -282,14 +283,6 @@ public class RightSideBar {
                     SalesOrderDb.insert(view.conn, o_id, shipping_option.getText(), "123Ship", cemail.getText());
                     view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, o_id), TableOptions.options.ITEMIZED_ORDER, o_id);
                 }
-
-                if (view.jTable.getSelectedRow() == -1) {
-                    return;
-                }
-                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
-
-                view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_ORDER, id);
-
 
             }
         });
@@ -363,28 +356,63 @@ public class RightSideBar {
         this.fulfillDelivery = new JButton("Delivery Received");
         fulfillDelivery.setMaximumSize(new Dimension(80, 40));
 
-        // todo
-        seeDetailsRep.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-                // need a popup window of a Jscroll Pane
-                // call upon view.jtable.getSelected();
-                // calls order_item_quantity_price where order_id = selected order_id
-                // pop up window needs to allow add / remove of items
-            }
-        });
-
-        // todo
+        // done
         addDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-                // need a popup window of a Jscroll Pane
-                // call upon view.jtable.getSelected();
-                // calls order_item_quantity_price where order_id = selected order_id
-                // pop up window needs to allow add / remove of items
+                JTextField del_id = new JTextField(5);
+                JTextField shipping_option = new JTextField(5);
+
+                JComboBox<String> suppliers = new JComboBox<String>();
+                AutoCompletion.enable(suppliers);
+                ResultSet rs = SupplierDb.getAll(view.conn);
+
+                try {
+                    while (rs.next()) {
+                        suppliers.addItem(rs.getString("email"));
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("ID:"));
+                myPanel.add(del_id);
+                myPanel.add(Box.createHorizontalStrut(5));
+                myPanel.add(new JLabel("Shipping Option:"));
+                myPanel.add(shipping_option);
+                myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+                myPanel.add(new JLabel("Supplier:"));
+                myPanel.add(suppliers);
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String sup = suppliers.getSelectedItem().toString();
+                    int d_id = Integer.parseInt(del_id.getText());
+
+                    ReplenishOrderDb.insert(view.conn, d_id, shipping_option.getText(), "123Ship", sup);
+                    view.refreshScrollPane(ReplenishOrderDb.getAllItemized(view.conn, d_id), TableOptions.options.ITEMIZED_DELIVERY, d_id);
+                }
+
+
             }
         });
 
+        seeDetailsRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+                int id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString());
+
+                view.refreshScrollPane(ReplenishOrderDb.getAllItemized(view.conn, id), TableOptions.options.ITEMIZED_DELIVERY, id);
+
+            }
+        });
         // done
         removeDelivery.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -461,6 +489,25 @@ public class RightSideBar {
             }
         });
 
+        removeOrderItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int i_id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),1).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delete Item " + i_id,"Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    ItemOrderDb.delete(view.conn, order_id, i_id);
+                    view.refreshScrollPane(SalesOrderDb.getAllItemized(view.conn, order_id), TableOptions.options.ITEMIZED_ORDER, order_id);
+                }
+            }
+        });
+
         addOrderItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -485,6 +532,101 @@ public class RightSideBar {
         });
 
 
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(this.back);
+        this.panel.add(this.addOrderItem);
+        this.panel.add(this.removeOrderItem);
+
+        SpringUtilities.makeCompactGrid(panel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
+
+    }
+
+    private void makeReplenishOrderItemizedBar(View view, int rep_id) {
+
+        this.back = new JButton("Back");
+        back.setMaximumSize(new Dimension(80, 40));
+        this.addOrderItem = new JButton("Add Item");
+        addOrderItem.setMaximumSize(new Dimension(80, 40));
+        this.removeOrderItem = new JButton("Remove Item");
+        removeOrderItem.setMaximumSize(new Dimension(80, 40));
+
+        //DONE
+        back.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                view.refreshScrollPane(ReplenishOrderDb.getAll(view.conn), TableOptions.options.REPLENISH_ORDER);
+            }
+        });
+
+        addOrderItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                ResultSet sr = ReplenishOrderDb.getSupplier(view.conn, rep_id);
+                String supplier;
+                try {
+                    sr.next();
+                    supplier = sr.getString("supplier_email");
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(supplier);
+
+                JComboBox<String> item_id = new JComboBox<String>();
+                AutoCompletion.enable(item_id);
+                ResultSet rs = SupplierListDb.getAllItems(view.conn, supplier);
+
+                try {
+                    while (rs.next()) {
+                        item_id.addItem(rs.getString("item_id"));
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                JTextField quantity = new JTextField(5);
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("Item ID:"));
+                myPanel.add(item_id);
+                myPanel.add(Box.createHorizontalStrut(10));
+                myPanel.add(new JLabel("Quantity:"));
+                myPanel.add(quantity);
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+
+                    int id = Integer.parseInt(item_id.getSelectedItem().toString());
+                    ItemReplenishDb.insert(view.conn, rep_id, id, Integer.parseInt(quantity.getText()));
+                    view.refreshScrollPane(ReplenishOrderDb.getAllItemized(view.conn, rep_id), TableOptions.options.ITEMIZED_DELIVERY, rep_id);
+                }
+            }
+        });
+
+        removeOrderItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                int i_id = Integer.parseInt(view.jTable.getValueAt(view.jTable.getSelectedRow(),1).toString());
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Delete Item " + i_id,"Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    ItemReplenishDb.delete(view.conn, rep_id, i_id);
+                    view.refreshScrollPane(ReplenishOrderDb.getAllItemized(view.conn, rep_id), TableOptions.options.ITEMIZED_DELIVERY, rep_id);
+                }
+            }
+        });
 
         SpringLayout layout = new SpringLayout();
         this.panel.setLayout(layout);

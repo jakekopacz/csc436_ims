@@ -37,6 +37,26 @@ public class SupplierListDb {
 
         return null;
     }
+
+    static public ResultSet getAllItems(Connection connection, String supplier_email) {
+
+        String sql = "SELECT item_id FROM SupplierList WHERE supplier_email = ?";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setString(1,supplier_email);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+    }
     public static void removeItem(Connection conn, int item_id) {
 
         //removeSupplier(conn, item_id);

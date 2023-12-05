@@ -21,7 +21,7 @@ public class JTableDb {
             @Override
             public boolean isCellEditable(int row, int column) {
 
-                if (op == TableOptions.options.ITEM_SUPPLIER) {
+                if (op == TableOptions.options.ITEM_SUPPLIER || op == TableOptions.options.ITEMIZED_DELIVERY) {
                     return false;
                 }
                 else if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
