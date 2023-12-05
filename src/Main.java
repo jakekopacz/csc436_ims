@@ -27,7 +27,9 @@ public class Main{
         	        new View(conn).setVisible(true);
 	        }
 	        });
-
+//		ExampleData.makeCustomers(conn);
+//		ExampleData.makeItems(conn);
+//		ExampleData.makeSupplier(conn);
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
 				closeConnection(conn);

@@ -31,8 +31,10 @@ public class RightSideBar {
                 makeReplenishOrderBar(view);
                 break;
             case CUSTOMER:
+                makeCustomerBar(view);
                 break;
             case SUPPLIER:
+                makeSupplierBar(view);
                 break;
         }
         this.panel.revalidate();
@@ -105,7 +107,7 @@ public class RightSideBar {
         this.panel.add(addItem);
         this.panel.add(removeItem);
         this.panel.add(seeSuppliers);
-        this.panel.add(new JLabel("WW"));
+        this.panel.add(new JLabel(" "));
 
         SpringUtilities.makeCompactGrid(panel,
                 8, 2, //rows, cols
@@ -695,7 +697,7 @@ public class RightSideBar {
                 try {
                     while (rs.next()) {
                         suppliers.addItem(rs.getString("email"));
-                        System.out.println(rs.getString("email"));
+                        //System.out.println(rs.getString("email"));
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -723,6 +725,46 @@ public class RightSideBar {
 
             }
         });
+
+    }
+
+    private void makeCustomerBar(View view) {
+
+        JButton details = new JButton("See Orders");
+        JButton add = new JButton("Add Customer");
+        JButton remove = new JButton("Remove Customer");
+
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(details);
+        this.panel.add(add);
+        this.panel.add(remove);
+
+
+        SpringUtilities.makeCompactGrid(panel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
+
+    }
+
+    private void makeSupplierBar(View view) {
+
+        JButton details = new JButton("See Deliveries");
+        JButton add = new JButton("Add Supplier");
+        JButton remove = new JButton("Remove Suppliers");
+        SpringLayout layout = new SpringLayout();
+        this.panel.setLayout(layout);
+        this.panel.add(details);
+        this.panel.add(add);
+        this.panel.add(remove);
+
+
+
+        SpringUtilities.makeCompactGrid(panel,
+                3, 1, //rows, cols
+                6, 6,        //initX, initY
+                6, 6);       //xPad, yPad
 
     }
     public JPanel getRightSideBar() {

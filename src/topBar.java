@@ -17,16 +17,32 @@ public class topBar {
         this.searchOptions = new JComboBox<String>();
         this.searchButton = new JButton();
         this.searchButton.setText("Search");
-
+        this.searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                performSearch();
+            }
+        });
         this.topPanel.add(this.searchInput);
         this.topPanel.add(this.searchOptions);
         this.topPanel.add(searchButton);
+
+    }
+
+    private void performSearch(){
+        javax.swing.table.TableRowSorter<javax.swing.table.TableModel> sorter = new javax.swing.table.TableRowSorter<>(this.mainView.jTable.getModel());
+        this.mainView.jTable.setRowSorter(sorter);
+        String query = searchInput.getText();
+        if(query.length() != 0){
+            sorter.setRowFilter(javax.swing.RowFilter.regexFilter("(?i)" + query, this.searchOptions.getSelectedIndex()));
+        } else {
+            sorter.setRowFilter(null);
+        }
     }
 
     public void makeTopBar() {
-        
+
         this.searchOptions.removeAllItems();
-        
+
         for(int i = 0, sz = this.mainView.jTable.getColumnCount(); i < sz; i++){
             this.searchOptions.addItem(this.mainView.jTable.getColumnName(i));
         }
@@ -35,6 +51,9 @@ public class topBar {
 
     public JPanel getTopBar() {
         return this.topPanel;
+    }
+    public JTextField getSearchInput(){
+        return this.searchInput;
     }
 
     private javax.swing.JPanel topPanel;
