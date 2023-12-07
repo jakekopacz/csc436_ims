@@ -75,12 +75,75 @@ public class SalesOrderDb {
 
     }
 
+    static public ResultSet getAllCustomer(Connection connection, String email) {
+
+        String sql = "SELECT * FROM SalesOrder_All_Info WHERE customer_email = ?";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setString(1, email);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
     static public ResultSet getAll(Connection connection) {
 
         String sql = "SELECT * FROM SalesOrder_All_Info";
 
         try {
             PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
+    static public ResultSet getAllItemized(Connection conn, int order_id) {
+
+        //String sql = "SELECT item_id, quantity, price, total_price FROM order_item_quantity_price WHERE order_id = ?";
+        String sql = "SELECT * FROM order_item_quantity_price WHERE order_id = ?";
+
+        try {
+            PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setInt(1, order_id);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
+    static public ResultSet getCustomer(Connection connection, String email) {
+
+        String sql = "SELECT * FROM SalesOrder WHERE customer_email = ?";
+
+        try {
+            PreparedStatement pstmnt = connection.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setString(1, email);
             ResultSet rs = pstmnt.executeQuery();
 
 //            rs.close();

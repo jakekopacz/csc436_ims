@@ -3,13 +3,13 @@ import java.sql.*;
 
 public class ItemDb {
 
-    public static void insert(Connection connection, int item_id, int quantity, float price, String category) {
+    public static void insert(Connection connection, int item_id, int quantity, double price, String category) {
         try {
             String sql = "INSERT INTO Item (item_id, quantity, price, category) VALUES (?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, item_id);
             statement.setInt(2, quantity);
-            statement.setFloat(3, price);
+            statement.setDouble(3, price);
             statement.setString(4, category);
             statement.executeUpdate();
             connection.commit();
@@ -114,6 +114,25 @@ public class ItemDb {
         }
     }
 
+    public static void incriment(Connection connection, int item_id, int change) {
+        try {
+            String sql = "UPDATE Item SET quantity = (quantity + ?) WHERE item_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, change);
+            statement.setInt(2, item_id);
+
+            int rowsAffected = statement.executeUpdate();
+            connection.commit();
+            if (rowsAffected > 0) {
+                System.out.println("Item modified successfully.");
+            } else {
+                System.out.println("Item not found.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     static public ResultSet getAll(Connection connection) {
 
         String sql = "SELECT * FROM Item";
@@ -132,7 +151,6 @@ public class ItemDb {
         }
 
         return null;
-
     }
     static public ResultSet quantitySearch(int min, int max, Connection connection) {
 

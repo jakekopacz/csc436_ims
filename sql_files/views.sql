@@ -1,6 +1,8 @@
 use Inventory;
 #VIEWS
 
+##9 views
+
 #make a view of total price for each product-quantity tuple
 create view order_item_quantity_price(order_id, item_id, quantity, price, total_price) as
 	SELECT ItemOrder.*, Item.price, (ItemOrder.quantity * Item.Price)
@@ -16,7 +18,7 @@ create view SalesOrder_All_Info(order_id, total_price, shipping_option, tracking
     SELECT SalesOrder.order_id, SalesOrder_total_price.total_price, SalesOrder.shipping_option, SalesOrder.tracking_num, SalesOrder.customer_email
     FROM SalesOrder LEFT OUTER JOIN SalesOrder_total_price on SalesOrder.order_id = SalesOrder_total_price.order_id;
 
-#Since cost can differ from supplier it is necissary to create a view that has supplier_email and replenish_id in it.
+#Since cost can differ from supplier it is necessary to create a view that has supplier_email and replenish_id in it.
 create view ItemReplenish_supplier_email as 
 	SELECT ItemReplenish.*, ReplenishOrder.supplier_email
     FROM ItemReplenish LEFT OUTER JOIN ReplenishOrder ON ItemReplenish.replenish_id = ReplenishOrder.replenish_id;
@@ -41,4 +43,8 @@ create view supplier_number_of_items(supplier_email, items_supplied) as
 create view item_number_of_suppliers(item_id, suppliers) as
 	SELECT item_id, count(supplier_email) FROM SupplierList
 	group by item_id;
+
+create view customer_details(customer_email, address_1, address_2, address_3, city, state, country, postal_code) as
+    SELECT customer_email, address_1, address_2, address_3, city, state, country, postal_code
+    FROM Customer LEFT OUTER JOIN MailingList ML on Customer.email = ML.customer_email;
 

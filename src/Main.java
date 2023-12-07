@@ -12,8 +12,6 @@ public class Main{
 	static final String START_SCRIPT = "sql/startup_script.sql";
 	static final String START_VIEW = "sql/views_script.sql";
 
-	
-
 	public static void main(String[] args) throws Exception{
 		// connect to db
 		Connection conn = getConnection();
@@ -29,7 +27,9 @@ public class Main{
         	        new View(conn).setVisible(true);
 	        }
 	        });
-
+//		ExampleData.makeCustomers(conn);
+//		ExampleData.makeItems(conn);
+//		ExampleData.makeSupplier(conn);
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
 				closeConnection(conn);

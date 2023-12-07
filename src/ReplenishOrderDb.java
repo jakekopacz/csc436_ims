@@ -58,6 +58,7 @@ public class ReplenishOrderDb {
      * @param updatedData
      */
     public static void update(Connection connection, int replenish_id, String colName, String updatedData) {
+
         try {
             String sql = "UPDATE ReplenishOrder SET " + colName + " = ? WHERE replenish_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -97,4 +98,69 @@ public class ReplenishOrderDb {
         return null;
 
     }
+
+    static public ResultSet getAllItemized(Connection conn, int replenish_id) {
+
+        //String sql = "SELECT item_id, quantity, price, total_price FROM order_item_quantity_price WHERE order_id = ?";
+        String sql = "SELECT * FROM ReplenishOrder_itemized WHERE replenish_id = ?";
+
+        try {
+            PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setInt(1, replenish_id);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
+    static public ResultSet getSupplier(Connection conn, int replenish_id) {
+
+        //String sql = "SELECT item_id, quantity, price, total_price FROM order_item_quantity_price WHERE order_id = ?";
+        String sql = "SELECT supplier_email FROM ReplenishOrder WHERE replenish_id = ?";
+
+        try {
+            PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pstmnt.setInt(1, replenish_id);
+            ResultSet rs = pstmnt.executeQuery();
+
+//            rs.close();
+//            pstmnt.close();
+            System.out.println("Search GOOD");
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
+//    static public ResultSet getItemized(Connection conn, int order_id) {
+//
+//        String sql = "SELECT * FROM ReplenishOrder_All_Info";
+//
+//        try {
+//            PreparedStatement pstmnt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+//            ResultSet rs = pstmnt.executeQuery();
+//
+////            rs.close();
+////            pstmnt.close();
+//            System.out.println("Search GOOD");
+//            return rs;
+//        } catch (SQLException e) {
+//            System.err.println(e.getMessage());
+//        }
+//
+//        return null;
+//
+//
+//    }
 }

@@ -167,14 +167,14 @@ public class View extends javax.swing.JFrame {
 
         jTable = new JTable();
         tablePane = new javax.swing.JScrollPane();
-        tablePaneClickMenu = new javax.swing.JPopupMenu();
-        tablePaneClickUpdate = new javax.swing.JMenuItem("Update");
-        tablePaneClickDelete = new javax.swing.JMenuItem("Delete");
+//        tablePaneClickMenu = new javax.swing.JPopupMenu();
+//        tablePaneClickUpdate = new javax.swing.JMenuItem("Update");
+//        tablePaneClickDelete = new javax.swing.JMenuItem("Delete");
         mainPanel = new javax.swing.JPanel();
-        updatePopup = new javax.swing.JOptionPane();
-        updatePanel = new javax.swing.JPanel();
-        buttonSubmit = new javax.swing.JButton();
-        buttonClose = new javax.swing.JButton();
+//        updatePopup = new javax.swing.JOptionPane();
+//        updatePanel = new javax.swing.JPanel();
+//        buttonSubmit = new javax.swing.JButton();
+//        buttonClose = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         menuFile = new javax.swing.JMenu();
         menuEdit = new javax.swing.JMenu();
@@ -192,40 +192,40 @@ public class View extends javax.swing.JFrame {
         menuBar.add(menuEdit);
         setJMenuBar(menuBar);
 
-        tablePaneClickUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postUpdatePanel();
-                updatePopup.showMessageDialog(null, updatePanel, "Update", JOptionPane.PLAIN_MESSAGE);
-            }
-        });
-        tablePaneClickDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                postUpdatePanel();
-                updatePopup.showMessageDialog(null, updatePanel, "Delete", JOptionPane.PLAIN_MESSAGE);
-            }
-        });
-        tablePaneClickMenu.add(tablePaneClickUpdate);
-        tablePaneClickMenu.add(tablePaneClickDelete);
-
-        buttonSubmit.setText("Submit");
-        buttonSubmit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ArrayList<String> input = new ArrayList<String>();
-                for(JTextField text: textfields){
-                    input.add(text.getText());
-                }
-                for(String str: input){
-                    System.out.println(str);
-                }
-            }
-        });
-
-        buttonClose.setText("Close");
-        buttonClose.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeUpdatePanel();
-            }
-        });
+//        tablePaneClickUpdate.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                postUpdatePanel();
+//                updatePopup.showMessageDialog(null, updatePanel, "Update", JOptionPane.PLAIN_MESSAGE);
+//            }
+//        });
+//        tablePaneClickDelete.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                postUpdatePanel();
+//                updatePopup.showMessageDialog(null, updatePanel, "Delete", JOptionPane.PLAIN_MESSAGE);
+//            }
+//        });
+//        tablePaneClickMenu.add(tablePaneClickUpdate);
+//        tablePaneClickMenu.add(tablePaneClickDelete);
+//
+//        buttonSubmit.setText("Submit");
+//        buttonSubmit.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                ArrayList<String> input = new ArrayList<String>();
+//                for(JTextField text: textfields){
+//                    input.add(text.getText());
+//                }
+//                for(String str: input){
+//                    System.out.println(str);
+//                }
+//            }
+//        });
+//
+//        buttonClose.setText("Close");
+//        buttonClose.addActionListener(new java.awt.event.ActionListener() {
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                removeUpdatePanel();
+//            }
+//        });
 
         // set component layout; basically order everything in the x-axis, then in the y-axis. for things to be next to each other along an axis, use parallel group
         GroupLayout layout = new GroupLayout(mainPanel);
@@ -243,7 +243,7 @@ public class View extends javax.swing.JFrame {
                                         .addComponent(this.topPanel.getTopBar()))
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(this.rightSideBar.getRightSideBar())))
-                        .addComponent(updatePanel)
+//                        .addComponent(updatePanel)
         );
 
         layout.setVerticalGroup(
@@ -253,7 +253,7 @@ public class View extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(this.topPanel.getTopBar(), 30, 30, 30)
                                 .addComponent(tablePane)
-                                .addComponent(updatePanel))
+                                /*.addComponent(updatePanel)*/)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(this.rightSideBar.getRightSideBar()))
         );
@@ -278,13 +278,37 @@ public class View extends javax.swing.JFrame {
         this.jTable = JTableDb.makeJTable(rs, this.conn, op);
         tablePane.setViewportView(this.jTable);
         // listener wouldn't persist across refreshes
-        tablePane.getViewport().getView().addMouseListener(new java.awt.event.MouseAdapter() { 
-            public void mousePressed(java.awt.event.MouseEvent me) { 
-                tablePaneClickMenu.show(tablePane.getViewport(), me.getX(), me.getY());
-            } 
-        }); 
+//        tablePane.getViewport().getView().addMouseListener(new java.awt.event.MouseAdapter() {
+//            public void mousePressed(java.awt.event.MouseEvent me) {
+//                tablePaneClickMenu.show(tablePane.getViewport(), me.getX(), me.getY());
+//            }
+//        });
 
         this.rightSideBar.makeSideBar(op, this);
+        this.topPanel.makeTopBar();
+
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+
+    }
+
+    public void refreshScrollPane(ResultSet rs, TableOptions.options op, int id) {
+        this.jTable = JTableDb.makeJTable(rs, this.conn, op);
+        tablePane.setViewportView(this.jTable);
+
+        this.rightSideBar.makeSideBar(op, this, id);
+        this.topPanel.makeTopBar();
+
+        this.mainPanel.revalidate();
+        this.mainPanel.repaint();
+
+    }
+
+    public void refreshScrollPane(ResultSet rs, TableOptions.options op, String id) {
+        this.jTable = JTableDb.makeJTable(rs, this.conn, op);
+        tablePane.setViewportView(this.jTable);
+
+        this.rightSideBar.makeSideBar(op, this, id);
         this.topPanel.makeTopBar();
 
         this.mainPanel.revalidate();
