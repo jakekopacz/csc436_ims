@@ -38,7 +38,7 @@ public class ExampleData {
         int index;
         File myObj = new File("/Users/jacobkopacz/Documents/IdeaProjects/csc436_ims/src/txt.txt");
         Scanner myReader = new Scanner(myObj);
-        while (num < 100) {
+        while (num < 25) {
 //            String data = myReader.nextLine();
 //            index = data.indexOf(',');
 //            String address = data.substring(0, index);

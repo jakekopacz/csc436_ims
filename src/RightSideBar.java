@@ -252,9 +252,9 @@ public class RightSideBar {
         seeDetails.setMaximumSize(new Dimension(80, 40));
         this.addOrder = new JButton("Add Order");
         addOrder.setMaximumSize(new Dimension(80, 40));
-        this.removeOrder = new JButton("Remove Order");
+        this.removeOrder = new JButton("Cancel Order");
         removeOrder.setMaximumSize(new Dimension(80, 40));
-        this.fulfillOrder = new JButton("Order Fulfilled");
+        this.fulfillOrder = new JButton("Order Sent");
         fulfillOrder.setMaximumSize(new Dimension(80, 40));
 
 
@@ -367,7 +367,7 @@ public class RightSideBar {
         seeDetailsRep.setMaximumSize(new Dimension(80, 40));
         this.addDelivery = new JButton("Add Delivery");
         addDelivery.setMaximumSize(new Dimension(80, 40));
-        this.removeDelivery = new JButton("Remove Delivery");
+        this.removeDelivery = new JButton("Cancel Delivery");
         removeDelivery.setMaximumSize(new Dimension(80, 40));
         this.fulfillDelivery = new JButton("Delivery Received");
         fulfillDelivery.setMaximumSize(new Dimension(80, 40));
@@ -831,7 +831,65 @@ public class RightSideBar {
         this.panel.add(add);
         this.panel.add(remove);
 
+        add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
 
+                JTextField email = new JTextField(10);
+
+
+                JPanel myPanel = new JPanel();
+                myPanel.add(new JLabel("Email:"));
+                myPanel.add(email);
+
+
+                int result = JOptionPane.showConfirmDialog(view, myPanel,
+                        null, JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    String id = email.getText();
+                    SupplierDb.insert(view.conn, id,0.0, 0);
+                    view.refreshScrollPane(SupplierDb.getAll(view.conn), TableOptions.options.SUPPLIER);
+                }
+
+            }
+        });
+
+        remove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                String id = view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString();
+
+                int choice = JOptionPane.showConfirmDialog(
+                        view, "Warning: Delete " + id + " is not reversible.", "Confirm",JOptionPane.YES_NO_OPTION);
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    try {
+                        DatabaseManager.removeCustomer(view.conn, id);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                    view.refreshScrollPane(CustomerDb.getAll(view.conn), TableOptions.options.CUSTOMER);
+                }
+            }
+        });
+
+        details.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+                if (view.jTable.getSelectedRow() == -1) {
+                    return;
+                }
+
+                String id = view.jTable.getValueAt(view.jTable.getSelectedRow(),0).toString();
+                view.refreshScrollPane(SalesOrderDb.getAllCustomer(view.conn, id), TableOptions.options.CUSTOMER_ORDERS, id);
+
+
+            }
+        });
 
         SpringUtilities.makeCompactGrid(panel,
                 3, 1, //rows, cols

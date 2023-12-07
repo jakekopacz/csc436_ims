@@ -25,7 +25,7 @@ public class JTableDb {
                     return false;
                 }
                 else if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
-                    if (column < 2) {
+                    if (column < 2 || column == 4) {
                         return false;
                     }
                 }
