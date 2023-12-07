@@ -1,6 +1,8 @@
 use Inventory;
 #VIEWS
 
+##9 views
+
 #make a view of total price for each product-quantity tuple
 create view order_item_quantity_price(order_id, item_id, quantity, price, total_price) as
 	SELECT ItemOrder.*, Item.price, (ItemOrder.quantity * Item.Price)

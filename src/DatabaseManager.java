@@ -17,7 +17,17 @@ public class DatabaseManager {
         ItemDb.delete(conn, item_id);
     }
 
-    private void addCustomer() {
+    public static void removeCustomer(Connection conn, String email) throws SQLException {
+
+        ResultSet rs = SalesOrderDb.getCustomer(conn, email);
+
+        if (rs.next() == false) {
+            CustomerDb.deleteMailingList(conn, email);
+            CustomerDb.delete(conn, email);
+        }
+        else {
+            System.out.println("Customer currently has an order");
+        }
 
     }
 

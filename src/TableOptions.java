@@ -9,7 +9,9 @@ public class TableOptions {
         SUPPLIER_LIST,
         ITEMIZED_ORDER,
         ITEMIZED_DELIVERY,
-        ITEM_SUPPLIER
+        ITEM_SUPPLIER,
+        CUSTOMER_ORDERS,
+        SUPPLIER_DELIVERIES
     }
 
 }

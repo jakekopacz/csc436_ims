@@ -21,7 +21,7 @@ public class JTableDb {
             @Override
             public boolean isCellEditable(int row, int column) {
 
-                if (op == TableOptions.options.ITEM_SUPPLIER || op == TableOptions.options.ITEMIZED_DELIVERY) {
+                if (op == TableOptions.options.ITEM_SUPPLIER || op == TableOptions.options.ITEMIZED_DELIVERY || op == TableOptions.options.CUSTOMER_ORDERS) {
                     return false;
                 }
                 else if (op == TableOptions.options.SALES_ORDER || op == TableOptions.options.REPLENISH_ORDER) {
@@ -61,28 +61,34 @@ public class JTableDb {
                 Object row_id = model.getValueAt(row, 0);
                 Object data = model.getValueAt(row, column);
 
-                int id = Integer.parseInt(row_id.toString());
                 String columnName = model.getColumnName(column);
 
-                System.out.println(id);
-                System.out.println(data);
+                int id;
+                String s_id;
 
                 switch (op) {
 
                     case ITEM:
+                        id = Integer.parseInt(row_id.toString());
                         makeItem(conn, columnName, id, data);
                         break;
                     case SALES_ORDER:
+                        id = Integer.parseInt(row_id.toString());
                         makeSalesOrder(conn, columnName, id, data);
                         break;
                     case REPLENISH_ORDER:
+                        id = Integer.parseInt(row_id.toString());
                         makeReplenishOrder(conn, columnName, id, data);
                     case CUSTOMER:
+                        s_id =row_id.toString();
+                        makeCustomer(conn, columnName, s_id, data.toString());
                         break;
                     case SUPPLIER:
+                        s_id =row_id.toString();
                         break;
                     case ITEMIZED_ORDER:
                         int item_id = Integer.parseInt(model.getValueAt(row, 1).toString());
+                        id = Integer.parseInt(row_id.toString());
                         makeItemizedOrder(conn, Integer.parseInt(data.toString()), id, item_id);
 
 
@@ -123,6 +129,14 @@ public class JTableDb {
 
     static private void makeItemizedOrder(Connection conn, int quantity,  int order_id, int item_id) {
         ItemOrderDb.update(conn, quantity, order_id, item_id);
+
+    }
+
+    static private void makeCustomer(Connection conn, String colName, String id, String data) {
+        CustomerDb.update(conn, colName, id, data);
+    }
+
+    static private void makeSupplier() {
 
     }
 

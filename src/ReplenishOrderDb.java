@@ -58,6 +58,7 @@ public class ReplenishOrderDb {
      * @param updatedData
      */
     public static void update(Connection connection, int replenish_id, String colName, String updatedData) {
+
         try {
             String sql = "UPDATE ReplenishOrder SET " + colName + " = ? WHERE replenish_id = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
